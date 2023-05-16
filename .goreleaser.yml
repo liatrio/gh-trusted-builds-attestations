@@ -1,0 +1,24 @@
+before:
+  hooks:
+    - go mod download
+builds:
+  - main: ./cmd/attestor.go
+    binary: attestor
+    env:
+     - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
