@@ -3,20 +3,11 @@ MAKEFLAGS += --silent
 default:
 	echo No default target
 
-.PHONY: pull-request
-pull-request:
-	go run cmd/attestor.go \
+.PHONY: github-pull-request
+github-pull-request:
+	go run cmd/attestation.go github-pull-request \
 		--rekor-url "https://rekor.sec-guild-dev.private.northcentralus.azmk8s.io" \
-		--kms-key-uri "azurekms://ag-poc-platform-c2wn.vault.azure.net/platform-team-cosign" \
-		--attestor "github-pull-request"
-
-.PHONY: generic
-generic:
-	go run cmd/attestor.go \
-		--rekor-url "https://rekor.sec-guild-dev.private.northcentralus.azmk8s.io" \
-		--kms-key-uri "azurekms://ag-poc-platform-c2wn.vault.azure.net/platform-team-cosign" \
-		--attestation-path "hack/gitsign-attestation.json" \
-		--attestor "generic"
+		--kms-key-uri "azurekms://ag-poc-platform-c2wn.vault.azure.net/platform-team-cosign"
 
 .PHONY: vsa
 vsa:
