@@ -30,6 +30,7 @@ type VsaCommandOptions struct {
 	CommitSha,
 	PolicyVersion,
 	VerifierId,
+	PredicateFilePath,
 	GithubToken string
 }
 
@@ -42,6 +43,7 @@ func NewVsaCommandOptions() *VsaCommandOptions {
 	c.fs.StringVar(&c.CommitSha, "commit-sha", "", "Git commit associated with the artifact")
 	c.fs.StringVar(&c.PolicyVersion, "policy-version", "", "GitHub release version of OPA bundle")
 	c.fs.StringVar(&c.VerifierId, "verifier-id", "", "ID of entity verifying policy for the VSA")
+	c.fs.StringVar(&c.PredicateFilePath, "predicate-file-path", "vsa.predicate.json", "The filename to write the VSA predicate")
 	c.AddFlags(c.fs)
 
 	return c

@@ -1,9 +1,9 @@
 package vsa
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -13,10 +13,8 @@ import (
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/intoto"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
 	"github.com/open-policy-agent/opa/rego"
-	"github.com/sigstore/cosign/v2/cmd/cosign/cli/options"
 	"github.com/sigstore/rekor/pkg/generated/models"
 	"golang.org/x/oauth2"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func Attest(opts *config.VsaCommandOptions) error {
@@ -36,27 +34,17 @@ func Attest(opts *config.VsaCommandOptions) error {
 	if err != nil {
 		return err
 	}
-	jsonVsa, err := protojson.Marshal(vsa)
+
+	vsaFile, err := os.Create(opts.PredicateFilePath)
 	if err != nil {
 		return err
 	}
+	defer vsaFile.Close()
 
-	signer, err := sigstore.NewSigner(opts.RekorUrl)
+	_, err = io.Copy(vsaFile, bytes.NewReader(vsa))
 	if err != nil {
 		return err
 	}
-
-	logEntry, err := signer.SignInTotoAttestation(ctx, jsonVsa, options.KeyOpts{
-		KeyRef:           opts.KmsKeyUri,
-		FulcioURL:        opts.FulcioUrl,
-		RekorURL:         opts.RekorUrl,
-		SkipConfirmation: true,
-	})
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("log entry index: %d\n", *logEntry.LogIndex)
 
 	return nil
 }
