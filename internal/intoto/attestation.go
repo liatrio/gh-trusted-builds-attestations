@@ -4,14 +4,11 @@ import (
 	"fmt"
 	"net/url"
 
-	spb "github.com/in-toto/attestation/go/v1"
+	vpb "github.com/in-toto/attestation/go/predicates/vsa/v0"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
 	"github.com/sigstore/rekor/pkg/generated/models"
 	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/types/known/structpb"
-
-	vpb "github.com/in-toto/attestation/go/predicates/vsa/v0"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -23,7 +20,7 @@ func verificationResult(passed bool) string {
 	return "FAILED"
 }
 
-func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed bool, entries []models.LogEntry) (*spb.Statement, error) {
+func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed bool, entries []models.LogEntry) ([]byte, error) {
 	var inputAttestations []*vpb.VerificationSummary_InputAttestation
 
 	for _, entry := range entries {
@@ -66,27 +63,5 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 		DependencyLevels:   map[string]uint64{},
 	}
 
-	predicateJson, err := protojson.Marshal(predicate)
-	if err != nil {
-		return nil, err
-	}
-	predicateStruct := &structpb.Struct{}
-	err = protojson.Unmarshal(predicateJson, predicateStruct)
-	if err != nil {
-		return nil, err
-	}
-
-	statement := &spb.Statement{
-		Type: "https://in-toto.io/Statement/v1",
-		Subject: []*spb.Statement_Subject{{
-			Name: opts.ArtifactUri,
-			Digest: map[string]string{
-				opts.ArtifactDigest.Type: opts.ArtifactDigest.RawDigest,
-			},
-		}},
-		PredicateType: "https://slsa.dev/verification_summary/v0.2",
-		Predicate:     predicateStruct,
-	}
-
-	return statement, nil
+	return protojson.Marshal(predicate)
 }
