@@ -2,11 +2,14 @@ package intoto
 
 import (
 	"fmt"
-	"github.com/in-toto/in-toto-golang/in_toto"
+	"net/url"
+
+	spb "github.com/in-toto/attestation/go/v1"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
 	"github.com/sigstore/rekor/pkg/generated/models"
-	"net/url"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/types/known/structpb"
 
 	vpb "github.com/in-toto/attestation/go/predicates/vsa/v0"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -20,7 +23,7 @@ func verificationResult(passed bool) string {
 	return "FAILED"
 }
 
-func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed bool, entries []models.LogEntry) (*in_toto.Statement, error) {
+func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed bool, entries []models.LogEntry) (*spb.Statement, error) {
 	var inputAttestations []*vpb.VerificationSummary_InputAttestation
 
 	for _, entry := range entries {
@@ -63,20 +66,26 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 		DependencyLevels:   map[string]uint64{},
 	}
 
-	statement := &in_toto.Statement{
-		StatementHeader: in_toto.StatementHeader{
-			Type:          "https://in-toto.io/Statement/v1",
-			PredicateType: "https://slsa.dev/verification_summary/v0.2",
-			Subject: []in_toto.Subject{
-				{
-					Name: opts.ArtifactUri,
-					Digest: map[string]string{
-						"sha256": opts.ArtifactDigest,
-					},
-				},
+	predicateJson, err := protojson.Marshal(predicate)
+	if err != nil {
+		return nil, err
+	}
+	predicateStruct := &structpb.Struct{}
+	err = protojson.Unmarshal(predicateJson, predicateStruct)
+	if err != nil {
+		return nil, err
+	}
+
+	statement := &spb.Statement{
+		Type: "https://in-toto.io/Statement/v1",
+		Subject: []*spb.Statement_Subject{{
+			Name: opts.ArtifactUri,
+			Digest: map[string]string{
+				opts.ArtifactDigest.Type: opts.ArtifactDigest.RawDigest,
 			},
-		},
-		Predicate: predicate,
+		}},
+		PredicateType: "https://slsa.dev/verification_summary/v0.2",
+		Predicate:     predicateStruct,
 	}
 
 	return statement, nil
