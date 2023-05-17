@@ -13,7 +13,6 @@ $ go run cmd/attestor.go \
 
 The attestor is expecting these flags:
 - `--attestor`: Name of the attestor to use
-- `--attestation-path`: File path to an in-toto attestation. Only used with the generic attestor
 - `--kms-key-uri`: An cloud provider KMS URI, in [`cosign`'s expected format](https://docs.sigstore.dev/cosign/kms_support/). Optional if a Fulcio URL is provided
 - `--fulcio-url`: The Fulcio CA url. If this is provided, the attestor will attempt to use keyless signing. Intended only for use with ambient providers like GitHub Actions, as there are no options for overriding the default OIDC settings.
 - `--rekor-url`: The transparency log URL
@@ -62,19 +61,13 @@ The attestor expects to run inside a Git repository, as it will use the `HEAD` s
 For development, you can set the environment variable `GH_PR_ATTESTOR_SHA_OVERRIDE` to use a different SHA; however, this will not work in CI servers
 that set the `CI` environment variable.
 
-### Generic
-
-Some tools, like `gitsign`, will produce attestations but don't provide a way to upload them to Rekor.
-This attestor reads a file from a given path and then signs and uploads the attestation to Rekor.
-Use this attestor sparingly and make sure you trust the input.
-
 ## Local Development
 
 In order to build the project, you'll need Go 1.20+.
 
 You'll also need a GitHub personal access token, which should be passed by setting the `GITHUB_TOKEN` environment variable.
 
-Each attestor should have a Make target to invoke it, like this: `make pull-request`
+Each attestor should have a Make target to invoke it, like this: `make github-pull-request`
 
 
 # gh-trusted-builds-vsa

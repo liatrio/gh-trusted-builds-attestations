@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/attestors"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/attestors/vsa"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
-	"log"
-	"os"
 )
 
 func main() {
@@ -23,20 +24,16 @@ func main() {
 	switch subCommand {
 	case "vsa":
 		opts := config.NewVsaCommandOptions()
-		opts.Parse(flags)
+		if err = opts.Parse(flags); err != nil {
+			break
+		}
 		err = vsa.Attest(opts)
 	case "github-pull-request":
 		opts := config.NewGitHubPullRequestCommandOptions()
-		opts.Parse(flags)
-		attestor, err := attestors.NewGitHubPullRequestAttestor(ctx, opts)
-		if err != nil {
+		if err = opts.Parse(flags); err != nil {
 			break
 		}
-		err = attestor.Attest(ctx, opts)
-	case "generic":
-		opts := config.NewGenericCommandOptions()
-		opts.Parse(flags)
-		attestor, err := attestors.NewGenericAttestor(opts)
+		attestor, err := attestors.NewGitHubPullRequestAttestor(ctx, opts)
 		if err != nil {
 			break
 		}

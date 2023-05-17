@@ -3,8 +3,11 @@ package vsa
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+	"os"
+
 	"github.com/google/go-github/v52/github"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/intoto"
@@ -13,9 +16,7 @@ import (
 	"github.com/sigstore/cosign/v2/cmd/cosign/cli/options"
 	"github.com/sigstore/rekor/pkg/generated/models"
 	"golang.org/x/oauth2"
-	"io"
-	"net/http"
-	"os"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func Attest(opts *config.VsaCommandOptions) error {
@@ -35,7 +36,7 @@ func Attest(opts *config.VsaCommandOptions) error {
 	if err != nil {
 		return err
 	}
-	jsonVsa, err := json.Marshal(vsa)
+	jsonVsa, err := protojson.Marshal(vsa)
 	if err != nil {
 		return err
 	}
@@ -63,7 +64,7 @@ func Attest(opts *config.VsaCommandOptions) error {
 func collectAttestations(ctx context.Context, opts *config.VsaCommandOptions) ([]models.LogEntry, error) {
 	var uuids []string
 
-	artifactUUIDs, err := sigstore.SearchByHash(ctx, opts.ArtifactDigest, opts.RekorUrl)
+	artifactUUIDs, err := sigstore.SearchByHash(ctx, opts.ArtifactDigest.RawDigest, opts.RekorUrl)
 	if err != nil {
 		return nil, err
 	}
