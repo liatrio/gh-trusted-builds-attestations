@@ -11,7 +11,9 @@ type GitHubPullRequestCommandOptions struct {
 }
 
 func NewGitHubPullRequestCommandOptions() *GitHubPullRequestCommandOptions {
-	c := &GitHubPullRequestCommandOptions{}
+	c := &GitHubPullRequestCommandOptions{
+		GlobalOptions: NewGlobalOptions(),
+	}
 
 	c.fs = flag.NewFlagSet("github-pull-request", flag.ContinueOnError)
 	c.AddFlags(c.fs)
