@@ -8,6 +8,8 @@ import (
 )
 
 type GlobalOptions struct {
+	OidcIssuerUrl,
+	OidcClientId,
 	FulcioUrl,
 	RekorUrl,
 	KmsKeyUri string
@@ -32,7 +34,17 @@ func (g *GlobalOptions) AddFlags(fs *flag.FlagSet) {
 		return nil
 	})
 
+	fs.Func("oidc-issuer-url", "OIDC issuer url for keyless signing", func(s string) error {
+		u, err := url.ParseRequestURI(s)
+		if err != nil {
+			return err
+		}
+		g.OidcIssuerUrl = u.String()
+		return nil
+	})
+
 	fs.StringVar(&g.KmsKeyUri, "kms-key-uri", "", "KMS Key Id for signing")
+	fs.StringVar(&g.OidcClientId, "oidc-client-id", "sigstore", "OIDC client id for keyless signing")
 }
 
 func GetGitHubEnvToken() (string, error) {
