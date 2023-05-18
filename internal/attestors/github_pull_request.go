@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 	"log"
 	"os"
 	"sort"
 	"time"
+
+	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 
 	"github.com/google/go-github/v52/github"
 	"github.com/in-toto/in-toto-golang/in_toto"
@@ -104,6 +105,8 @@ func (g *GitHubPullRequestAttestor) Attest(ctx context.Context, opts *config.Git
 			return fmt.Errorf("error marshalling attestation json: %v", err)
 		}
 		logEntry, err := g.signer.SignInTotoAttestation(ctx, payload, options.KeyOpts{
+			OIDCIssuer:       opts.OidcIssuerUrl,
+			OIDCClientID:     opts.OidcClientId,
 			KeyRef:           opts.KmsKeyUri,
 			FulcioURL:        opts.FulcioUrl,
 			RekorURL:         opts.RekorUrl,

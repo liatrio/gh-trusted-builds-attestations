@@ -10,19 +10,12 @@ import (
 	"github.com/sigstore/cosign/v2/cmd/cosign/cli/options"
 	"github.com/sigstore/cosign/v2/cmd/cosign/cli/sign"
 	"github.com/sigstore/cosign/v2/pkg/cosign"
-	providers "github.com/sigstore/cosign/v2/pkg/providers/all"
 	"github.com/sigstore/cosign/v2/pkg/types"
 	rekor "github.com/sigstore/rekor/pkg/client"
 	rekorgen "github.com/sigstore/rekor/pkg/generated/client"
 	"github.com/sigstore/rekor/pkg/generated/models"
 	"github.com/sigstore/sigstore/pkg/signature/dsse"
 	signatureoptions "github.com/sigstore/sigstore/pkg/signature/options"
-
-	// load KMS providers
-	_ "github.com/sigstore/sigstore/pkg/signature/kms/aws"
-	_ "github.com/sigstore/sigstore/pkg/signature/kms/azure"
-	_ "github.com/sigstore/sigstore/pkg/signature/kms/gcp"
-	_ "github.com/sigstore/sigstore/pkg/signature/kms/hashivault"
 
 	// load OIDC providers
 	_ "github.com/sigstore/cosign/v2/pkg/providers/all"
@@ -51,14 +44,6 @@ func NewSigner(rekorUrl string) (Signer, error) {
 }
 
 func (s *cosignSigner) SignInTotoAttestation(ctx context.Context, payload []byte, opts options.KeyOpts) (*models.LogEntryAnon, error) {
-	var err error
-	if providers.Enabled(ctx) {
-		opts.IDToken, err = providers.Provide(ctx, "sigstore")
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	sv, err := sign.SignerFromKeyOpts(ctx, "", "", opts)
 	if err != nil {
 		return nil, fmt.Errorf("error creating signer: %v", err)
