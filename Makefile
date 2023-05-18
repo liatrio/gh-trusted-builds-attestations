@@ -6,8 +6,6 @@ default:
 .PHONY: github-pull-request
 github-pull-request:
 	go run cmd/attestation.go github-pull-request \
-		--rekor-url "https://rekor.sigstore.dev" \
-		--fulcio-url "https://fulcio.sigstore.dev" \
 		--oidc-issuer-url "https://oauth2.sigstore.dev/auth"
 
 .PHONY: vsa
@@ -17,5 +15,4 @@ vsa:
         --commit-sha "5b25a576d343d7877753b8c2861860f0599749aa" \
         --artifact-uri "ghcr.io/liatrio/gh-trusted-builds-app" \
         --policy-version "v1.1.1" \
-        --verifier-id "local-verifier" \
-        --rekor-url "https://rekor.sigstore.dev"
+        --verifier-id "local-verifier"

@@ -15,6 +15,13 @@ type GlobalOptions struct {
 	KmsKeyUri string
 }
 
+func NewGlobalOptions() GlobalOptions {
+	return GlobalOptions{
+		FulcioUrl: "https://fulcio.sigstore.dev",
+		RekorUrl:  "https://rekor.sigstore.dev",
+	}
+}
+
 func (g *GlobalOptions) AddFlags(fs *flag.FlagSet) {
 	fs.Func("rekor-url", "Rekor server URL", func(s string) error {
 		u, err := url.ParseRequestURI(s)

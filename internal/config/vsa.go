@@ -35,7 +35,10 @@ type VsaCommandOptions struct {
 }
 
 func NewVsaCommandOptions() *VsaCommandOptions {
-	c := &VsaCommandOptions{ArtifactDigest: &Digest{}}
+	c := &VsaCommandOptions{
+		ArtifactDigest: &Digest{},
+		GlobalOptions:  NewGlobalOptions(),
+	}
 
 	c.fs = flag.NewFlagSet("vsa", flag.ContinueOnError)
 	c.fs.StringVar(&c.ArtifactDigest.Value, "artifact-digest", "", "Digest of the OCI artifact. Should be prefixed with the digest hash type, e.g., sha256:60bcfdd2...")
