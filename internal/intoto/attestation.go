@@ -5,9 +5,11 @@ import (
 	"net/url"
 
 	vpb "github.com/in-toto/attestation/go/predicates/vsa/v0"
+	spb "github.com/in-toto/attestation/go/v1"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 	"github.com/sigstore/cosign/v2/pkg/oci"
 	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -64,5 +66,27 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 		DependencyLevels:   map[string]uint64{},
 	}
 
-	return protojson.Marshal(predicate)
+	predicateJson, err := protojson.Marshal(predicate)
+	if err != nil {
+		return nil, err
+	}
+	predicateStruct := &structpb.Struct{}
+	err = protojson.Unmarshal(predicateJson, predicateStruct)
+	if err != nil {
+		return nil, err
+	}
+
+	statement := &spb.Statement{
+		Type: "https://in-toto.io/Statement/v1",
+		Subject: []*spb.Statement_Subject{{
+			Name: opts.ArtifactUri,
+			Digest: map[string]string{
+				opts.ArtifactDigest.Type: opts.ArtifactDigest.RawDigest,
+			},
+		}},
+		PredicateType: "https://slsa.dev/verification_summary/v0.2",
+		Predicate:     predicateStruct,
+	}
+
+	return protojson.Marshal(statement)
 }
