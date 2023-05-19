@@ -5,18 +5,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"runtime"
+	"runtime/debug"
+
 	"github.com/google/go-containerregistry/pkg/name"
 	"github.com/sigstore/cosign/v2/pkg/oci/mutate"
 	"github.com/sigstore/cosign/v2/pkg/oci/static"
-	"io"
-	"os"
-	"runtime"
-	"runtime/debug"
 
 	ssldsse "github.com/secure-systems-lab/go-securesystemslib/dsse"
 	"github.com/sigstore/cosign/v2/cmd/cosign/cli/options"
 	"github.com/sigstore/cosign/v2/cmd/cosign/cli/sign"
 	"github.com/sigstore/cosign/v2/pkg/cosign"
+	cbundle "github.com/sigstore/cosign/v2/pkg/cosign/bundle"
 	ociremote "github.com/sigstore/cosign/v2/pkg/oci/remote"
 	"github.com/sigstore/cosign/v2/pkg/types"
 	rekor "github.com/sigstore/rekor/pkg/client"
@@ -74,16 +74,6 @@ func (s *cosignSigner) SignInTotoAttestation(ctx context.Context, payload []byte
 		return nil, fmt.Errorf("error uploading to tlog: %v", err)
 	}
 
-	attFile, err := os.Create("github-pull-request.att")
-	if err != nil {
-		return logEntry, err
-	}
-
-	_, err = io.Copy(attFile, bytes.NewReader(signedPayload))
-	if err != nil {
-		return logEntry, err
-	}
-
 	regOpts := options.RegistryOptions{
 		AllowInsecure:      false,
 		AllowHTTPRegistry:  false,
@@ -95,7 +85,7 @@ func (s *cosignSigner) SignInTotoAttestation(ctx context.Context, payload []byte
 	if err != nil {
 		return logEntry, err
 	}
-	err = AttachAttestation(ctx, clientOpts, attFile.Name(), imageRef, regOpts.NameOptions(), sv)
+	err = AttachAttestation(logEntry, clientOpts, signedPayload, imageRef, regOpts.NameOptions(), sv)
 	if err != nil {
 		return logEntry, err
 	}
@@ -103,15 +93,9 @@ func (s *cosignSigner) SignInTotoAttestation(ctx context.Context, payload []byte
 	return logEntry, nil
 }
 
-func AttachAttestation(ctx context.Context, remoteOpts []ociremote.Option, signedPayload, imageRef string, nameOpts []name.Option, sv *sign.SignerVerifier) error {
-	fmt.Fprintf(os.Stderr, "Using payload from: %s", signedPayload)
-	attestationFile, err := os.Open(signedPayload)
-	if err != nil {
-		return err
-	}
-
+func AttachAttestation(logEntry *models.LogEntryAnon, remoteOpts []ociremote.Option, signedPayload []byte, imageRef string, nameOpts []name.Option, sv *sign.SignerVerifier) error {
 	env := ssldsse.Envelope{}
-	decoder := json.NewDecoder(attestationFile)
+	decoder := json.NewDecoder(bytes.NewReader(signedPayload))
 	for decoder.More() {
 		if err := decoder.Decode(&env); err != nil {
 			return err
@@ -134,10 +118,6 @@ func AttachAttestation(ctx context.Context, remoteOpts []ociremote.Option, signe
 		if err != nil {
 			return err
 		}
-		//if _, ok := ref.(name.Digest); !ok {
-		//	msg := fmt.Sprintf(ui.TagReferenceMessage, imageRef)
-		//	ui.Warnf(ctx, msg)
-		//}
 		digest, err := ociremote.ResolveDigest(ref, remoteOpts...)
 		if err != nil {
 			return err
@@ -145,13 +125,14 @@ func AttachAttestation(ctx context.Context, remoteOpts []ociremote.Option, signe
 		// Overwrite "ref" with a digest to avoid a race where we use a tag
 		// multiple times, and it potentially points to different things at
 		// each access.
-		ref = digest // nolint
+		ref = digest
 
-		defer sv.Close()
 		opts := []static.Option{static.WithLayerMediaType(types.DssePayloadType)}
 		if sv.Cert != nil {
 			opts = append(opts, static.WithCertChain(sv.Cert, sv.Chain))
 		}
+
+		opts = append(opts, static.WithBundle(cbundle.EntryToBundle(logEntry)))
 		att, err := static.NewAttestation(payload, opts...)
 		if err != nil {
 			return err
