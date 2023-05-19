@@ -9,6 +9,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/common"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 
 	"github.com/google/go-github/v52/github"
@@ -18,7 +19,6 @@ import (
 	gh "github.com/liatrio/gh-trusted-builds-attestations/internal/github"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/util"
-	"github.com/sigstore/cosign/v2/cmd/cosign/cli/options"
 )
 
 const (
@@ -100,22 +100,24 @@ func (g *GitHubPullRequestAttestor) Attest(ctx context.Context, opts *config.Git
 			return err
 		}
 
+		// include the image in the list of subjects to assist with verification
+		attestation.Subject = append(attestation.Subject, in_toto.Subject{
+			Name: opts.ArtifactUri,
+			Digest: common.DigestSet{
+				opts.ArtifactDigest.Type: opts.ArtifactDigest.RawDigest,
+			},
+		})
+
 		payload, err := json.Marshal(attestation)
 		if err != nil {
 			return fmt.Errorf("error marshalling attestation json: %v", err)
 		}
-		logEntry, err := g.signer.SignInTotoAttestation(ctx, payload, options.KeyOpts{
-			OIDCIssuer:       opts.OidcIssuerUrl,
-			OIDCClientID:     opts.OidcClientId,
-			KeyRef:           opts.KmsKeyUri,
-			FulcioURL:        opts.FulcioUrl,
-			RekorURL:         opts.RekorUrl,
-			SkipConfirmation: true,
-		})
+		logEntry, err := g.signer.SignInTotoAttestation(ctx, payload, opts.KeyOpts(), opts.FullArtifactId())
 		if err != nil {
 			return err
 		}
-		log.Printf("Uploaded attestation with log index #%d\n", *logEntry.LogIndex)
+
+		log.Printf("Uploaded attestation with log index: %d\n", *logEntry.LogIndex)
 	}
 
 	return nil

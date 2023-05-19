@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+
+	"github.com/sigstore/cosign/v2/cmd/cosign/cli/options"
 )
 
 type GlobalOptions struct {
@@ -12,13 +14,34 @@ type GlobalOptions struct {
 	OidcClientId,
 	FulcioUrl,
 	RekorUrl,
-	KmsKeyUri string
+	ArtifactUri string
+	ArtifactDigest *Digest
+}
+
+func (g *GlobalOptions) Parse() error {
+	return g.ArtifactDigest.Parse()
+}
+
+func (g *GlobalOptions) FullArtifactId() string {
+	return fmt.Sprintf("%s@%s", g.ArtifactUri, g.ArtifactDigest.Value)
+}
+
+func (g *GlobalOptions) KeyOpts() options.KeyOpts {
+	return options.KeyOpts{
+		OIDCIssuer:       g.OidcIssuerUrl,
+		OIDCClientID:     g.OidcClientId,
+		FulcioURL:        g.FulcioUrl,
+		RekorURL:         g.RekorUrl,
+		SkipConfirmation: true,
+	}
 }
 
 func NewGlobalOptions() GlobalOptions {
 	return GlobalOptions{
-		FulcioUrl: "https://fulcio.sigstore.dev",
-		RekorUrl:  "https://rekor.sigstore.dev",
+		FulcioUrl:      "https://fulcio.sigstore.dev",
+		RekorUrl:       "https://rekor.sigstore.dev",
+		OidcIssuerUrl:  "https://oauth2.sigstore.dev/auth",
+		ArtifactDigest: &Digest{},
 	}
 }
 
@@ -50,8 +73,9 @@ func (g *GlobalOptions) AddFlags(fs *flag.FlagSet) {
 		return nil
 	})
 
-	fs.StringVar(&g.KmsKeyUri, "kms-key-uri", "", "KMS Key Id for signing")
 	fs.StringVar(&g.OidcClientId, "oidc-client-id", "sigstore", "OIDC client id for keyless signing")
+	fs.StringVar(&g.ArtifactDigest.Value, "artifact-digest", "", "Digest of the OCI artifact. Should be prefixed with the digest hash type, e.g., sha256:60bcfdd2...")
+	fs.StringVar(&g.ArtifactUri, "artifact-uri", "", "URI of the OCI artifact")
 }
 
 func GetGitHubEnvToken() (string, error) {

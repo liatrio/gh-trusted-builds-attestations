@@ -27,6 +27,10 @@ func (c *GitHubPullRequestCommandOptions) Parse(args []string) error {
 		return err
 	}
 	c.GithubToken = githubToken
+	err = c.fs.Parse(args)
+	if err != nil {
+		return err
+	}
 
-	return c.fs.Parse(args)
+	return c.GlobalOptions.ArtifactDigest.Parse()
 }

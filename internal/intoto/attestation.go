@@ -6,8 +6,7 @@ import (
 
 	vpb "github.com/in-toto/attestation/go/predicates/vsa/v0"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
-	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
-	"github.com/sigstore/rekor/pkg/generated/models"
+	"github.com/sigstore/cosign/v2/pkg/oci"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -20,32 +19,34 @@ func verificationResult(passed bool) string {
 	return "FAILED"
 }
 
-func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed bool, entries []models.LogEntry) ([]byte, error) {
+func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed bool, attestations []oci.Signature) ([]byte, error) {
 	var inputAttestations []*vpb.VerificationSummary_InputAttestation
 
-	for _, entry := range entries {
-		for _, e := range entry {
-			entryUriPath, err := url.JoinPath(opts.RekorUrl, "api/v1/log/entries")
-			if err != nil {
-				return nil, err
-			}
-
-			body, err := sigstore.ParseInTotoBody(e)
-			if err != nil {
-				return nil, err
-			}
-
-			inputAttestations = append(inputAttestations, &vpb.VerificationSummary_InputAttestation{
-				Uri: fmt.Sprintf(
-					"%s?logIndex=%d",
-					entryUriPath,
-					e.LogIndex,
-				),
-				Digest: map[string]string{
-					body.Spec.Content.PayloadHash.Algorithm: body.Spec.Content.PayloadHash.Value,
-				},
-			})
+	for _, attestation := range attestations {
+		entryUriPath, err := url.JoinPath(opts.RekorUrl, "api/v1/log/entries")
+		if err != nil {
+			return nil, err
 		}
+
+		rekorBundle, err := attestation.Bundle()
+		if err != nil {
+			return nil, err
+		}
+		digest, err := attestation.Digest()
+		if err != nil {
+			return nil, err
+		}
+
+		inputAttestations = append(inputAttestations, &vpb.VerificationSummary_InputAttestation{
+			Uri: fmt.Sprintf(
+				"%s?logIndex=%d",
+				entryUriPath,
+				rekorBundle.Payload.LogIndex,
+			),
+			Digest: map[string]string{
+				digest.Algorithm: digest.Hex,
+			},
+		})
 	}
 
 	predicate := &vpb.VerificationSummary{
