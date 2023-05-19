@@ -101,10 +101,6 @@ func collectAttestations(ctx context.Context, opts *config.VsaCommandOptions) ([
 				Issuer:  "https://token.actions.githubusercontent.com",
 				Subject: "https://github.com/liatrio/gh-trusted-builds-workflows/.github/workflows/scan-image.yaml@refs/heads/main",
 			},
-			{
-				Issuer:  "https://github.com/login/oauth",
-				Subject: "alexa@liatrio.com",
-			},
 		},
 	})
 	if err != nil {
