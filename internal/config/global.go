@@ -11,8 +11,7 @@ type GlobalOptions struct {
 	OidcIssuerUrl,
 	OidcClientId,
 	FulcioUrl,
-	RekorUrl,
-	KmsKeyUri string
+	RekorUrl string
 }
 
 func NewGlobalOptions() GlobalOptions {
@@ -50,7 +49,6 @@ func (g *GlobalOptions) AddFlags(fs *flag.FlagSet) {
 		return nil
 	})
 
-	fs.StringVar(&g.KmsKeyUri, "kms-key-uri", "", "KMS Key Id for signing")
 	fs.StringVar(&g.OidcClientId, "oidc-client-id", "sigstore", "OIDC client id for keyless signing")
 }
 

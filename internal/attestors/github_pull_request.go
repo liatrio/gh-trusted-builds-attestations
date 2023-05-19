@@ -107,7 +107,6 @@ func (g *GitHubPullRequestAttestor) Attest(ctx context.Context, opts *config.Git
 		logEntry, err := g.signer.SignInTotoAttestation(ctx, payload, options.KeyOpts{
 			OIDCIssuer:       opts.OidcIssuerUrl,
 			OIDCClientID:     opts.OidcClientId,
-			KeyRef:           opts.KmsKeyUri,
 			FulcioURL:        opts.FulcioUrl,
 			RekorURL:         opts.RekorUrl,
 			SkipConfirmation: true,
