@@ -33,8 +33,9 @@ func main() {
 		if err = opts.Parse(flags); err != nil {
 			break
 		}
-		attestor, err := attestors.NewGitHubPullRequestAttestor(ctx, opts)
-		if err != nil {
+		attestor, attErr := attestors.NewGitHubPullRequestAttestor(ctx, opts)
+		if attErr != nil {
+			err = attErr
 			break
 		}
 		err = attestor.Attest(ctx, opts)

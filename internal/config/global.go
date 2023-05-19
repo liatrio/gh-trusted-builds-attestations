@@ -12,13 +12,20 @@ type GlobalOptions struct {
 	OidcClientId,
 	FulcioUrl,
 	RekorUrl,
+	ArtifactUri,
 	KmsKeyUri string
+	ArtifactDigest *Digest
+}
+
+func (g *GlobalOptions) Parse() error {
+	return g.ArtifactDigest.Parse()
 }
 
 func NewGlobalOptions() GlobalOptions {
 	return GlobalOptions{
-		FulcioUrl: "https://fulcio.sigstore.dev",
-		RekorUrl:  "https://rekor.sigstore.dev",
+		FulcioUrl:      "https://fulcio.sigstore.dev",
+		RekorUrl:       "https://rekor.sigstore.dev",
+		ArtifactDigest: &Digest{},
 	}
 }
 
@@ -52,6 +59,8 @@ func (g *GlobalOptions) AddFlags(fs *flag.FlagSet) {
 
 	fs.StringVar(&g.KmsKeyUri, "kms-key-uri", "", "KMS Key Id for signing")
 	fs.StringVar(&g.OidcClientId, "oidc-client-id", "sigstore", "OIDC client id for keyless signing")
+	fs.StringVar(&g.ArtifactDigest.Value, "artifact-digest", "", "Digest of the OCI artifact. Should be prefixed with the digest hash type, e.g., sha256:60bcfdd2...")
+	fs.StringVar(&g.ArtifactUri, "artifact-uri", "", "URI of the OCI artifact")
 }
 
 func GetGitHubEnvToken() (string, error) {

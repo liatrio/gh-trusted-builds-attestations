@@ -6,6 +6,8 @@ default:
 .PHONY: github-pull-request
 github-pull-request:
 	go run cmd/attestation.go github-pull-request \
+		--artifact-digest "sha256:04169a9d1c6b627a7bee1fa2de0459e053c5e14704004492de5c148ea2e1d40d" \
+		--artifact-uri "ghcr.io/liatrio/gh-trusted-builds-app" \
 		--oidc-issuer-url "https://oauth2.sigstore.dev/auth"
 
 .PHONY: vsa

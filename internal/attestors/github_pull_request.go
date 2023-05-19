@@ -111,10 +111,11 @@ func (g *GitHubPullRequestAttestor) Attest(ctx context.Context, opts *config.Git
 			FulcioURL:        opts.FulcioUrl,
 			RekorURL:         opts.RekorUrl,
 			SkipConfirmation: true,
-		})
+		}, fmt.Sprintf("%s@%s", opts.ArtifactUri, opts.ArtifactDigest.Value))
 		if err != nil {
 			return err
 		}
+
 		log.Printf("Uploaded attestation with log index #%d\n", *logEntry.LogIndex)
 	}
 
