@@ -19,7 +19,6 @@ import (
 	gh "github.com/liatrio/gh-trusted-builds-attestations/internal/github"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/util"
-	"github.com/sigstore/cosign/v2/cmd/cosign/cli/options"
 )
 
 const (
@@ -113,18 +112,12 @@ func (g *GitHubPullRequestAttestor) Attest(ctx context.Context, opts *config.Git
 		if err != nil {
 			return fmt.Errorf("error marshalling attestation json: %v", err)
 		}
-		logEntry, err := g.signer.SignInTotoAttestation(ctx, payload, options.KeyOpts{
-			OIDCIssuer:       opts.OidcIssuerUrl,
-			OIDCClientID:     opts.OidcClientId,
-			FulcioURL:        opts.FulcioUrl,
-			RekorURL:         opts.RekorUrl,
-			SkipConfirmation: true,
-		}, fmt.Sprintf("%s@%s", opts.ArtifactUri, opts.ArtifactDigest.Value))
+		logEntry, err := g.signer.SignInTotoAttestation(ctx, payload, opts.KeyOpts(), opts.FullArtifactId())
 		if err != nil {
 			return err
 		}
 
-		log.Printf("Uploaded attestation with log index #%d\n", *logEntry.LogIndex)
+		log.Printf("Uploaded attestation with log index: %d\n", *logEntry.LogIndex)
 	}
 
 	return nil

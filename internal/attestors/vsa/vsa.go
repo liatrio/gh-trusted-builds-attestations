@@ -1,12 +1,12 @@
 package vsa
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 
@@ -14,6 +14,7 @@ import (
 	"github.com/google/go-github/v52/github"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/intoto"
+	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/sigstore/cosign/v2/pkg/cosign"
 	"github.com/sigstore/cosign/v2/pkg/oci"
@@ -40,16 +41,16 @@ func Attest(opts *config.VsaCommandOptions) error {
 		return err
 	}
 
-	vsaFile, err := os.Create(opts.PredicateFilePath)
+	signer, err := sigstore.NewSigner(opts.RekorUrl)
 	if err != nil {
 		return err
 	}
-	defer vsaFile.Close()
 
-	_, err = io.Copy(vsaFile, bytes.NewReader(vsa))
+	logEntry, err := signer.SignInTotoAttestation(ctx, vsa, opts.KeyOpts(), opts.FullArtifactId())
 	if err != nil {
 		return err
 	}
+	log.Printf("Uploaded attestation with log index: %d\n", *logEntry.LogIndex)
 
 	return nil
 }

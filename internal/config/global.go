@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+
+	"github.com/sigstore/cosign/v2/cmd/cosign/cli/options"
 )
 
 type GlobalOptions struct {
@@ -22,6 +24,16 @@ func (g *GlobalOptions) Parse() error {
 
 func (g *GlobalOptions) FullArtifactId() string {
 	return fmt.Sprintf("%s@%s", g.ArtifactUri, g.ArtifactDigest.Value)
+}
+
+func (g *GlobalOptions) KeyOpts() options.KeyOpts {
+	return options.KeyOpts{
+		OIDCIssuer:       g.OidcIssuerUrl,
+		OIDCClientID:     g.OidcClientId,
+		FulcioURL:        g.FulcioUrl,
+		RekorURL:         g.RekorUrl,
+		SkipConfirmation: true,
+	}
 }
 
 func NewGlobalOptions() GlobalOptions {
