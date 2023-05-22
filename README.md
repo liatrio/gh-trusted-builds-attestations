@@ -108,10 +108,6 @@ ex: `60bcfdd293baac977357527bbd7ec2b5a7584ce276d33de0a4980c8ace6afd67`
 `--artifact-uri`: URI of the OCI artifact i.e., the subject of the VSA.
 ex: `agplatformrnim.azurecr.io/liatrio/gh-trusted-builds-app`
 
-`--commit-sha`: Sha1 git commit that the artifact was built from.
-Used for retrieving source attestations related to the artifact.
-ex: `24d01c0c9f456f0d0fac8de7f18dc09d5d554ce9`
-
 `--policy-version`: GitHub release version of the governance policy to download from [gh-trusted-builds-policy](https://github.com/liatrio/gh-trusted-builds-policy).
 This is the OPA bundle that will be used at runtime to determine the VSA `verification_result`.
 ex: `v1.0.0`
