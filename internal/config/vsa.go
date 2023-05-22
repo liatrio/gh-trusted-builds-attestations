@@ -25,10 +25,9 @@ func (d *Digest) Parse() error {
 type VsaCommandOptions struct {
 	GlobalOptions
 	fs *flag.FlagSet
-	CommitSha,
 	PolicyVersion,
 	VerifierId,
-	GithubToken string
+	GitHubToken string
 }
 
 func NewVsaCommandOptions() *VsaCommandOptions {
@@ -37,7 +36,6 @@ func NewVsaCommandOptions() *VsaCommandOptions {
 	}
 
 	c.fs = flag.NewFlagSet("vsa", flag.ContinueOnError)
-	c.fs.StringVar(&c.CommitSha, "commit-sha", "", "Git commit associated with the artifact")
 	c.fs.StringVar(&c.PolicyVersion, "policy-version", "", "GitHub release version of OPA bundle")
 	c.fs.StringVar(&c.VerifierId, "verifier-id", "", "ID of entity verifying policy for the VSA")
 	c.AddFlags(c.fs)
@@ -50,7 +48,7 @@ func (c *VsaCommandOptions) Parse(args []string) error {
 	if err != nil {
 		return err
 	}
-	c.GithubToken = githubToken
+	c.GitHubToken = githubToken
 	if err = c.fs.Parse(args); err != nil {
 		return err
 	}

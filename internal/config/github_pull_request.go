@@ -7,7 +7,7 @@ import (
 type GitHubPullRequestCommandOptions struct {
 	GlobalOptions
 	fs          *flag.FlagSet
-	GithubToken string
+	GitHubToken string
 }
 
 func NewGitHubPullRequestCommandOptions() *GitHubPullRequestCommandOptions {
@@ -26,7 +26,7 @@ func (c *GitHubPullRequestCommandOptions) Parse(args []string) error {
 	if err != nil {
 		return err
 	}
-	c.GithubToken = githubToken
+	c.GitHubToken = githubToken
 	err = c.fs.Parse(args)
 	if err != nil {
 		return err
