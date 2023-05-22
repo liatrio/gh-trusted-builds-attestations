@@ -18,11 +18,16 @@ $ ./attestation <attestation-type> [--flag]
 
 All attestation types may use or require these flags. 
 
-- `--kms-key-uri`: An cloud provider KMS URI, in [`cosign`'s expected format](https://docs.sigstore.dev/cosign/kms_support/).
-  Optional if a Fulcio URL is provided.
-- `--fulcio-url`: The Fulcio CA url for keyless signing.
+- `--fulcio-url`: The Fulcio CA url for keyless signing. Defaults to `https://fulcio.sigstore.dev`.
   Intended only for use with ambient providers like GitHub Actions, as there are no options for overriding the default OIDC settings.
-- `--rekor-url`: **required** The transparency log URL.
+- `--rekor-url`: The transparency log URL. Defaults to `https://rekor.sigstore.dev`.
+- `--oidc-issuer-url`: Defaults to `https://oauth2.sigstore.dev/auth`.
+- `--oidc-client-id`: Defaults to `sigstore`.
+- `--artifact-uri`: **required** URI of the OCI artifact i.e., the subject of the attestation.
+  ex: `ghcr.io/liatrio/gh-trusted-builds-app`
+- `--artifact-digest`: **required**  digest of the OCI artifact.
+  Used for retrieving related artifact attestations, and marking the attestation subject.
+  ex: `sha256:60bcfdd293baac977357527bbd7ec2b5a7584ce276d33de0a4980c8ace6afd67`
 
 ### Attestations
 
@@ -45,28 +50,31 @@ It can be used to verify that:
 _type: https://in-toto.io/Statement/v0.1
 predicateType: https://liatr.io/attestations/github-pull-request/v1
 subject:
-  - name: git+https://github.com/liatrio/custom-attestations-poc.git
+  - name: git+https://github.com/liatrio/gh-trusted-builds-app.git
     digest:
-      sha1: ccdb1357fc52fea7cf8204b5f3c8d6eb4e1b8846
+      sha1: e1f1d4396181766e12fca22f2ba856e8154b4304
+  - name: ghcr.io/liatrio/gh-trusted-builds-app
+    digest:
+      sha256: 6c3bf887638f7c0d86731e6208befa1b439e465cb435465d982c50609553b514
 predicate:
-  link: https://github.com/liatrio/custom-attestations-poc/pull/2
-  title: 'docs: save Microsoft a few bytes'
-  author: alexashley
-  mergedBy: alexashley
-  createdAt: '2023-04-24T19:07:47Z'
-  mergedAt: '2023-04-24T19:15:18Z'
+  link: https://github.com/liatrio/gh-trusted-builds-app/pull/1
+  title: 'docs: remove extra newline'
+  author: rcoy-v
+  mergedBy: rcoy-v
+  createdAt: '2023-05-22T15:27:05Z'
+  mergedAt: '2023-05-22T15:27:27Z'
   base: main
-  head: important-work
-  approved: true # true only when the number of approvals is equal to the number of reviewers (excluding comment-only reviews)
+  head: rcoy-v-patch-1
+  approved: true
   reviewers:
-    - name: rcoy-v
+    - name: alexashley
       approved: true
       reviewLink: >-
-        https://github.com/liatrio/custom-attestations-poc/pull/2#pullrequestreview-1398643433
-      timestamp: '2023-04-24T19:12:11Z'
+        https://github.com/liatrio/gh-trusted-builds-app/pull/1#pullrequestreview-1436887240
+      timestamp: '2023-05-22T15:27:18Z'
   contributors:
-    - name: alexashley
-  predicateCreatedAt: '2023-04-25T19:52:43.3419Z'
+    - name: rcoy-v
+  predicateCreatedAt: '2023-05-22T15:28:48.369418041Z'
 ```
 
 The attestor expects to run inside a Git repository, as it will use the `HEAD` sha to lookup pull requests.
@@ -100,13 +108,6 @@ The following process is used to create a VSA:
 `GITHUB_TOKEN`: A GitHub token with access to read releases from https://github.com/liatrio/gh-trusted-builds-policy.
 
 ##### Command Flags
-
-`--artifact-digest`: Sha256 digest of the OCI artifact.
-Used for retrieving related artifact attestations, and marking the VSA subject.
-ex: `60bcfdd293baac977357527bbd7ec2b5a7584ce276d33de0a4980c8ace6afd67`
-
-`--artifact-uri`: URI of the OCI artifact i.e., the subject of the VSA.
-ex: `agplatformrnim.azurecr.io/liatrio/gh-trusted-builds-app`
 
 `--policy-version`: GitHub release version of the governance policy to download from [gh-trusted-builds-policy](https://github.com/liatrio/gh-trusted-builds-policy).
 This is the OPA bundle that will be used at runtime to determine the VSA `verification_result`.

@@ -34,7 +34,7 @@ type GitHubPullRequestAttestor struct {
 }
 
 func NewGitHubPullRequestAttestor(ctx context.Context, opts *config.GitHubPullRequestCommandOptions) (*GitHubPullRequestAttestor, error) {
-	githubClient, err := gh.New(ctx, opts.GithubToken)
+	githubClient, err := gh.New(ctx, opts.GitHubToken)
 	if err != nil {
 		return nil, err
 	}

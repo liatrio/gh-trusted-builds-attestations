@@ -164,7 +164,7 @@ func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attesta
 
 func downloadOPABundle(ctx context.Context, opts *config.VsaCommandOptions) error {
 	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: opts.GithubToken},
+		&oauth2.Token{AccessToken: opts.GitHubToken},
 	)
 	tc := oauth2.NewClient(ctx, ts)
 

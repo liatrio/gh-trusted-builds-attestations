@@ -27,7 +27,7 @@ type VsaCommandOptions struct {
 	fs *flag.FlagSet
 	PolicyVersion,
 	VerifierId,
-	GithubToken string
+	GitHubToken string
 }
 
 func NewVsaCommandOptions() *VsaCommandOptions {
@@ -48,7 +48,7 @@ func (c *VsaCommandOptions) Parse(args []string) error {
 	if err != nil {
 		return err
 	}
-	c.GithubToken = githubToken
+	c.GitHubToken = githubToken
 	if err = c.fs.Parse(args); err != nil {
 		return err
 	}
