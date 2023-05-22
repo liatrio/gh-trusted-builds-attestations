@@ -6,7 +6,7 @@ This is an example of how to create custom attestations using `in-toto` and `cos
 
 Directly from source:
 ```shell
-$ go run cmd/attestor.go <attestation-type> [--flag]
+$ go run cmd/attestation.go <attestation-type> [--flag]
 ```
 
 Downloaded and extracted binary from [GitHub Releases](https://github.com/liatrio/gh-trusted-builds-attestations/releases):
