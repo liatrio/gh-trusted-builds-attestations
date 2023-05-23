@@ -18,16 +18,21 @@ $ ./attestation <attestation-type> [--flag]
 
 All attestation types may use or require these flags. 
 
-- `--fulcio-url`: The Fulcio CA url for keyless signing. Defaults to `https://fulcio.sigstore.dev`.
+`--fulcio-url`: The Fulcio CA url for keyless signing. Defaults to `https://fulcio.sigstore.dev`.
   Intended only for use with ambient providers like GitHub Actions, as there are no options for overriding the default OIDC settings.
-- `--rekor-url`: The transparency log URL. Defaults to `https://rekor.sigstore.dev`.
-- `--oidc-issuer-url`: Defaults to `https://oauth2.sigstore.dev/auth`.
-- `--oidc-client-id`: Defaults to `sigstore`.
-- `--artifact-uri`: **required** URI of the OCI artifact i.e., the subject of the attestation.
-  ex: `ghcr.io/liatrio/gh-trusted-builds-app`
-- `--artifact-digest`: **required**  digest of the OCI artifact.
-  Used for retrieving related artifact attestations, and marking the attestation subject.
-  ex: `sha256:60bcfdd293baac977357527bbd7ec2b5a7584ce276d33de0a4980c8ace6afd67`
+
+`--rekor-url`: The transparency log URL. Defaults to `https://rekor.sigstore.dev`.
+
+`--oidc-issuer-url`: Defaults to `https://oauth2.sigstore.dev/auth`.
+
+`--oidc-client-id`: Defaults to `sigstore`.
+
+`--artifact-uri`: **required** URI of the OCI artifact i.e., the subject of the attestation.
+ex: `ghcr.io/liatrio/gh-trusted-builds-app`
+
+`--artifact-digest`: **required**  digest of the OCI artifact.
+Used for retrieving related artifact attestations, and marking the attestation subject.
+ex: `sha256:60bcfdd293baac977357527bbd7ec2b5a7584ce276d33de0a4980c8ace6afd67`
 
 ### Attestations
 
@@ -81,7 +86,7 @@ The attestor expects to run inside a Git repository, as it will use the `HEAD` s
 For development, you can set the environment variable `GH_PR_ATTESTOR_SHA_OVERRIDE` to use a different SHA; however, this will not work in CI servers
 that set the `CI` environment variable.
 
-#### Environment Variables
+##### Environment Variables
 
 `GITHUB_TOKEN`: A GitHub token with access to read pull request information from repository of the commit.
 
@@ -103,15 +108,16 @@ The following process is used to create a VSA:
 1. Sign the attestation, using either the KMS or Fulcio methods configured via flags.
 1. Upload the VSA to Rekor.
 
-##### Environment Variables
-
-`GITHUB_TOKEN`: A GitHub token with access to read releases from https://github.com/liatrio/gh-trusted-builds-policy.
-
 ##### Command Flags
 
-`--policy-version`: GitHub release version of the governance policy to download from [gh-trusted-builds-policy](https://github.com/liatrio/gh-trusted-builds-policy).
-This is the OPA bundle that will be used at runtime to determine the VSA `verification_result`.
-ex: `v1.0.0`
+`--policy-url`: Location of policy bundle that will be used to determine VSA result.
+Absolute paths will be handled as http requests to download the bundle.
+Relative paths will be handled as local filepaths to an existing bundle.
+
+Examples:
+
+- `https://github.com/liatrio/gh-trusted-builds-policy/releases/download/v1.1.1/bundle.tar.gz`
+- `bundle.tar.gz`
 
 `--verifier-id`: ID of entity verifying the policy for the VSA.
 

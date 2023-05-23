@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -24,10 +25,9 @@ func (d *Digest) Parse() error {
 
 type VsaCommandOptions struct {
 	GlobalOptions
-	fs *flag.FlagSet
-	PolicyVersion,
-	VerifierId,
-	GitHubToken string
+	fs         *flag.FlagSet
+	PolicyUrl  *url.URL
+	VerifierId string
 }
 
 func NewVsaCommandOptions() *VsaCommandOptions {
@@ -36,7 +36,15 @@ func NewVsaCommandOptions() *VsaCommandOptions {
 	}
 
 	c.fs = flag.NewFlagSet("vsa", flag.ContinueOnError)
-	c.fs.StringVar(&c.PolicyVersion, "policy-version", "", "GitHub release version of OPA bundle")
+	c.fs.Func("policy-url", "URL to retrieve policy bundle. Absolute paths will be handled as HTTP requests. Relative paths will be handled as local filepaths.", func(s string) error {
+		u, err := url.Parse(s)
+		if err != nil {
+			return err
+		}
+		c.PolicyUrl = u
+		return nil
+	})
+
 	c.fs.StringVar(&c.VerifierId, "verifier-id", "", "ID of entity verifying policy for the VSA")
 	c.AddFlags(c.fs)
 
@@ -44,13 +52,12 @@ func NewVsaCommandOptions() *VsaCommandOptions {
 }
 
 func (c *VsaCommandOptions) Parse(args []string) error {
-	githubToken, err := GetGitHubEnvToken()
-	if err != nil {
+	if err := c.fs.Parse(args); err != nil {
 		return err
 	}
-	c.GitHubToken = githubToken
-	if err = c.fs.Parse(args); err != nil {
-		return err
+
+	if c.PolicyUrl == nil {
+		return fmt.Errorf("policy-url must be provided")
 	}
 
 	return c.ArtifactDigest.Parse()
