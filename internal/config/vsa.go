@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"net/url"
+	"regexp"
 	"strings"
 )
 
@@ -36,11 +37,17 @@ func NewVsaCommandOptions() *VsaCommandOptions {
 	}
 
 	c.fs = flag.NewFlagSet("vsa", flag.ContinueOnError)
-	c.fs.Func("policy-url", "URL to retrieve policy bundle. Absolute paths will be handled as HTTP requests. Relative paths will be handled as local filepaths.", func(s string) error {
+	c.fs.Func("policy-url", "Location of policy bundle that will be used to determine VSA result", func(s string) error {
 		u, err := url.Parse(s)
 		if err != nil {
 			return err
 		}
+
+		supportedSchemes := regexp.MustCompile("^https?$")
+		if u.IsAbs() && !supportedSchemes.MatchString(u.Scheme) {
+			return fmt.Errorf("unsupported scheme provided, should be one of http, https")
+		}
+
 		c.PolicyUrl = u
 		return nil
 	})

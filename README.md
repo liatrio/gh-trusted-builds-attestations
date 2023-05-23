@@ -111,13 +111,15 @@ The following process is used to create a VSA:
 ##### Command Flags
 
 `--policy-url`: Location of policy bundle that will be used to determine VSA result.
-Absolute paths will be handled as http requests to download the bundle.
-Relative paths will be handled as local filepaths to an existing bundle.
+Supports http(s) urls for unauthenticated external downloads.
+Absolute and relative paths can be used for an existing, local bundle.
 
 Examples:
 
 - `https://github.com/liatrio/gh-trusted-builds-policy/releases/download/v1.1.1/bundle.tar.gz`
 - `bundle.tar.gz`
+- `../bundle.tar.gz`
+- `/Users/myhome/bundle.tar.gz`
 
 `--verifier-id`: ID of entity verifying the policy for the VSA.
 
