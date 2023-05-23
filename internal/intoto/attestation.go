@@ -58,7 +58,7 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 		TimeVerified: timestamppb.Now(),
 		ResourceUri:  opts.ArtifactUri,
 		Policy: &vpb.VerificationSummary_Policy{
-			Uri: fmt.Sprintf("https://github.com/liatrio/gh-trusted-builds-policy/releases/download/%s/bundle.tar.gz", opts.PolicyVersion),
+			Uri: opts.PolicyUrl.String(),
 		},
 		InputAttestations:  inputAttestations,
 		VerificationResult: verificationResult(passed),

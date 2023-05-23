@@ -5,13 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io"
-	"log"
-	"net/http"
-	"os"
-
 	"github.com/google/go-containerregistry/pkg/name"
-	"github.com/google/go-github/v52/github"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/intoto"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
@@ -20,7 +14,11 @@ import (
 	"github.com/sigstore/cosign/v2/pkg/oci"
 	rekor "github.com/sigstore/rekor/pkg/client"
 	"github.com/sigstore/sigstore/pkg/fulcioroots"
-	"golang.org/x/oauth2"
+	"io"
+	"log"
+	"net/http"
+	"net/url"
+	"os"
 )
 
 func Attest(opts *config.VsaCommandOptions) error {
@@ -115,9 +113,17 @@ func collectAttestations(ctx context.Context, opts *config.VsaCommandOptions) ([
 }
 
 func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attestations []oci.Signature) (bool, error) {
-	err := downloadOPABundle(ctx, opts)
-	if err != nil {
-		return false, err
+	var bundleFilepath string
+
+	if opts.PolicyUrl.IsAbs() {
+		bundleFilepath = "bundle.tar.gz"
+
+		err := downloadOPABundle(ctx, opts.PolicyUrl, bundleFilepath)
+		if err != nil {
+			return false, err
+		}
+	} else {
+		bundleFilepath = opts.PolicyUrl.Path
 	}
 
 	query := "data.governance.allow"
@@ -151,7 +157,7 @@ func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attesta
 		rego.Query(query),
 		rego.Input(input),
 		rego.EnablePrintStatements(true),
-		rego.LoadBundle("bundle.tar.gz"),
+		rego.LoadBundle(bundleFilepath),
 	)
 
 	rs, err := r.Eval(context.Background())
@@ -162,41 +168,20 @@ func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attesta
 	return rs.Allowed(), nil
 }
 
-func downloadOPABundle(ctx context.Context, opts *config.VsaCommandOptions) error {
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: opts.GitHubToken},
-	)
-	tc := oauth2.NewClient(ctx, ts)
-
-	gh := github.NewClient(tc)
-
-	tag, response, err := gh.Repositories.GetReleaseByTag(ctx, "liatrio", "gh-trusted-builds-policy", opts.PolicyVersion)
+func downloadOPABundle(ctx context.Context, bundleUrl *url.URL, outputFilepath string) error {
+	resp, err := http.Get(bundleUrl.String())
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
+	defer resp.Body.Close()
 
-	var id int64
-	for _, asset := range tag.Assets {
-		if *asset.Name == "bundle.tar.gz" {
-			id = *asset.ID
-		}
-		break
-	}
-
-	rc, _, err := gh.Repositories.DownloadReleaseAsset(ctx, "liatrio", "gh-trusted-builds-policy", id, http.DefaultClient)
-	if err != nil {
-		return err
-	}
-	defer rc.Close()
-
-	bundleFile, err := os.Create("bundle.tar.gz")
+	bundleFile, err := os.Create(outputFilepath)
 	if err != nil {
 		return err
 	}
 	defer bundleFile.Close()
 
-	_, err = io.Copy(bundleFile, rc)
+	_, err = io.Copy(bundleFile, resp.Body)
 	if err != nil {
 		return err
 	}
