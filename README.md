@@ -123,6 +123,11 @@ Examples:
 
 `--verifier-id`: ID of entity verifying the policy for the VSA.
 
+#### Version
+
+- Subcommand: `version`
+
+Prints the build version information of the application.
 
 ## Local Development
 
