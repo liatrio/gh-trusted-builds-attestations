@@ -10,7 +10,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		log.Fatal(fmt.Errorf("no attestation type given"))
+		log.Fatal(fmt.Errorf("no subcommand give, please run `help` for more information"))
 	}
 
 	ctx := context.Background()
@@ -40,5 +40,5 @@ func main() {
 		}
 	}
 
-	log.Fatal(fmt.Errorf("no matching command given, please run `help` for more information"))
+	log.Fatal(fmt.Errorf("no matching subcommand given, please run `help` for more information"))
 }
