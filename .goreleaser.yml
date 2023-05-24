@@ -4,7 +4,7 @@ before:
 builds:
   - main: ./main.go
     binary: attestation
-    ldflags: -X github.com/liatrio/gh-trusted-builds-attestations/build.Version={{.Version}}
+    ldflags: -X github.com/liatrio/gh-trusted-builds-attestations/build.Version={{.Tag}}
     env:
      - CGO_ENABLED=0
     goos:
