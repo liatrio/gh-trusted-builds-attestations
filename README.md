@@ -6,13 +6,15 @@ This is an example of how to create custom attestations using `in-toto` and `cos
 
 Directly from source:
 ```shell
-$ go run cmd/attestation.go <attestation-type> [--flag]
+$ go run main.go <attestation-type> [--flag]
 ```
 
 Downloaded and extracted binary from [GitHub Releases](https://github.com/liatrio/gh-trusted-builds-attestations/releases):
 ```shell
 $ ./attestation <attestation-type> [--flag]
 ```
+
+There are also working examples of each command in the [Makefile](Makefile).
 
 ### Global Flags
 
@@ -123,6 +125,17 @@ Examples:
 
 `--verifier-id`: ID of entity verifying the policy for the VSA.
 
+#### Version
+
+- Subcommand: `version`
+
+Prints the build version information of the application.
+
+#### Help
+
+- Subcommand: `help`
+
+Prints the available subcommands that can be executed.
 
 ## Local Development
 

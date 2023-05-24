@@ -2,8 +2,9 @@ before:
   hooks:
     - go mod download
 builds:
-  - main: ./cmd/attestation.go
+  - main: ./main.go
     binary: attestation
+    ldflags: -X github.com/liatrio/gh-trusted-builds-attestations/build.Version={{.Tag}}
     env:
      - CGO_ENABLED=0
     goos:
@@ -12,7 +13,6 @@ builds:
     goarch:
       - amd64
       - arm64
-
 checksum:
   name_template: 'checksums.txt'
 snapshot:
