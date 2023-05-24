@@ -40,5 +40,5 @@ func main() {
 		}
 	}
 
-	log.Fatal(fmt.Errorf("attestation type not recognized"))
+	log.Fatal(fmt.Errorf("no matching command given, please run `help` for more information"))
 }
