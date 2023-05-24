@@ -129,6 +129,12 @@ Examples:
 
 Prints the build version information of the application.
 
+#### Help
+
+- Subcommand: `help`
+
+Prints the available subcommands that can be executed.
+
 ## Local Development
 
 In order to build the project, you'll need Go 1.20+.

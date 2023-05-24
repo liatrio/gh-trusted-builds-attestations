@@ -21,6 +21,7 @@ func main() {
 		&cmd.GitHubPullRequest{},
 		&cmd.VSA{},
 		&cmd.Version{},
+		&cmd.Help{},
 	}
 
 	for _, c := range commands {

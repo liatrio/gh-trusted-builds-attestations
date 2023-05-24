@@ -28,3 +28,7 @@ vsa:
 .PHONY: version
 version:
 	go run $(LDFLAGS) main.go version
+
+.PHONY: help
+help:
+	go run $(LDFLAGS) main.go help
