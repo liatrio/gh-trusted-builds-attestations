@@ -20,9 +20,9 @@ github-pull-request:
 .PHONY: vsa
 vsa:
 	go run $(LDFLAGS) main.go vsa \
-		--artifact-digest "sha256:6c3bf887638f7c0d86731e6208befa1b439e465cb435465d982c50609553b514" \
+		--artifact-digest "sha256:5f3b045689a0c948418c2dc52086102f59aaeba82784f099f130081c8cac9ed0" \
         --artifact-uri "ghcr.io/liatrio/gh-trusted-builds-app" \
-        --policy-url "https://github.com/liatrio/gh-trusted-builds-policy/releases/download/v1.1.1/bundle.tar.gz" \
+        --policy-url ../gh-trusted-builds-policy \
         --verifier-id "local-verifier"
 
 .PHONY: version
