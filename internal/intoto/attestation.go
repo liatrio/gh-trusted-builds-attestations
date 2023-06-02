@@ -7,7 +7,6 @@ import (
 	vpb "github.com/in-toto/attestation/go/predicates/vsa/v0"
 	spb "github.com/in-toto/attestation/go/v1"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
-	"github.com/sigstore/cosign/v2/pkg/oci"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -21,20 +20,23 @@ func verificationResult(passed bool) string {
 	return "FAILED"
 }
 
-func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed bool, attestations []oci.Signature) ([]byte, error) {
+type Attestation struct {
+	Attestation     string
+	RekorLogIndex   int64
+	DigestAlgorithm string
+	DigestHex       string
+}
+
+type PolicyEvaluationResult struct {
+	Allow        bool
+	Attestations []*Attestation
+}
+
+func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, result *PolicyEvaluationResult) ([]byte, error) {
 	var inputAttestations []*vpb.VerificationSummary_InputAttestation
 
-	for _, attestation := range attestations {
+	for _, attestation := range result.Attestations {
 		entryUriPath, err := url.JoinPath(opts.RekorUrl, "api/v1/log/entries")
-		if err != nil {
-			return nil, err
-		}
-
-		rekorBundle, err := attestation.Bundle()
-		if err != nil {
-			return nil, err
-		}
-		digest, err := attestation.Digest()
 		if err != nil {
 			return nil, err
 		}
@@ -43,10 +45,10 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 			Uri: fmt.Sprintf(
 				"%s?logIndex=%d",
 				entryUriPath,
-				rekorBundle.Payload.LogIndex,
+				attestation.RekorLogIndex,
 			),
 			Digest: map[string]string{
-				digest.Algorithm: digest.Hex,
+				attestation.DigestAlgorithm: attestation.DigestHex,
 			},
 		})
 	}
@@ -61,7 +63,7 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 			Uri: opts.PolicyUrl.String(),
 		},
 		InputAttestations:  inputAttestations,
-		VerificationResult: verificationResult(passed),
+		VerificationResult: verificationResult(result.Allow),
 		PolicyLevel:        "SLSA_LEVEL_3",
 		DependencyLevels:   map[string]uint64{},
 	}
