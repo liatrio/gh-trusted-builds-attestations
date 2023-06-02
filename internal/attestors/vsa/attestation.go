@@ -1,4 +1,4 @@
-package intoto
+package vsa
 
 import (
 	"fmt"
@@ -20,19 +20,19 @@ func verificationResult(passed bool) string {
 	return "FAILED"
 }
 
-type Attestation struct {
+type attestationMetadata struct {
 	Attestation     string
 	RekorLogIndex   int64
 	DigestAlgorithm string
 	DigestHex       string
 }
 
-type PolicyEvaluationResult struct {
+type policyEvaluationResult struct {
 	Allow        bool
-	Attestations []*Attestation
+	Attestations []*attestationMetadata
 }
 
-func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, result *PolicyEvaluationResult) ([]byte, error) {
+func createVerificationSummaryAttestation(opts *config.VsaCommandOptions, result *policyEvaluationResult) ([]byte, error) {
 	var inputAttestations []*vpb.VerificationSummary_InputAttestation
 
 	for _, attestation := range result.Attestations {

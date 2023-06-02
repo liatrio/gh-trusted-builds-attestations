@@ -15,7 +15,6 @@ import (
 
 	"github.com/google/go-containerregistry/pkg/name"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
-	"github.com/liatrio/gh-trusted-builds-attestations/internal/intoto"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -34,7 +33,7 @@ func Attest(opts *config.VsaCommandOptions) error {
 		return err
 	}
 
-	vsa, err := intoto.CreateVerificationSummaryAttestation(opts, result)
+	vsa, err := createVerificationSummaryAttestation(opts, result)
 	if err != nil {
 		return err
 	}
@@ -53,7 +52,7 @@ func Attest(opts *config.VsaCommandOptions) error {
 	return nil
 }
 
-func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions) (*intoto.PolicyEvaluationResult, error) {
+func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions) (*policyEvaluationResult, error) {
 	var bundleFilepath string
 
 	if opts.PolicyUrl.IsAbs() {
@@ -99,7 +98,7 @@ func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions) (*intot
 	if err != nil {
 		return nil, err
 	}
-	var result intoto.PolicyEvaluationResult
+	var result policyEvaluationResult
 	if err = json.Unmarshal(resultBytes, &result); err != nil {
 		return nil, err
 	}
@@ -134,7 +133,7 @@ func opaVerifyImageAttestations(ctx context.Context, opts *config.VsaCommandOpti
 			return nil, fmt.Errorf("attestation bundle failed verification")
 		}
 
-		var attestations []*intoto.Attestation
+		var attestations []*attestationMetadata
 		for _, attestation := range sigs {
 			payload, err := attestation.Payload()
 			if err != nil {
@@ -166,7 +165,7 @@ func opaVerifyImageAttestations(ctx context.Context, opts *config.VsaCommandOpti
 				return nil, err
 			}
 
-			attestations = append(attestations, &intoto.Attestation{
+			attestations = append(attestations, &attestationMetadata{
 				Attestation:     string(decoded),
 				RekorLogIndex:   bundle.Payload.LogIndex,
 				DigestAlgorithm: digest.Algorithm,
