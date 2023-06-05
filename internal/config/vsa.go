@@ -26,9 +26,12 @@ func (d *Digest) Parse() error {
 
 type VsaCommandOptions struct {
 	GlobalOptions
-	fs         *flag.FlagSet
-	PolicyUrl  *url.URL
-	VerifierId string
+	fs                    *flag.FlagSet
+	PolicyUrl             *url.URL
+	VerifierId            string
+	Debug                 bool
+	SignerIdentitiesQuery string
+	PolicyQuery           string
 }
 
 func NewVsaCommandOptions() *VsaCommandOptions {
@@ -53,6 +56,10 @@ func NewVsaCommandOptions() *VsaCommandOptions {
 	})
 
 	c.fs.StringVar(&c.VerifierId, "verifier-id", "", "ID of entity verifying policy for the VSA")
+	c.fs.StringVar(&c.SignerIdentitiesQuery, "signer-identities-query", "data.governance.signer_identities", "Rego query to retrieve keyless signer identities")
+	c.fs.StringVar(&c.PolicyQuery, "policy-query", "data.governance.allow", "Rego query to evaluate attestations against policy")
+	c.fs.BoolVar(&c.Debug, "debug", false, "Emit debug logs from policy evaluation")
+
 	c.AddFlags(c.fs)
 
 	return c

@@ -4,27 +4,41 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/google/go-containerregistry/pkg/name"
-	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
-	"github.com/liatrio/gh-trusted-builds-attestations/internal/intoto"
-	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
-	"github.com/open-policy-agent/opa/rego"
-	"github.com/sigstore/cosign/v2/pkg/cosign"
-	"github.com/sigstore/cosign/v2/pkg/oci"
-	rekor "github.com/sigstore/rekor/pkg/client"
-	"github.com/sigstore/sigstore/pkg/fulcioroots"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/google/go-containerregistry/pkg/name"
+	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
+	"github.com/liatrio/gh-trusted-builds-attestations/internal/intoto"
+	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
+	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/topdown"
+	"github.com/sigstore/cosign/v2/pkg/cosign"
+	"github.com/sigstore/cosign/v2/pkg/oci"
+	rekor "github.com/sigstore/rekor/pkg/client"
+	"github.com/sigstore/sigstore/pkg/fulcioroots"
 )
 
 func Attest(opts *config.VsaCommandOptions) error {
 	ctx := context.Background()
 
-	attestations, err := collectAttestations(ctx, opts)
+	if opts.PolicyUrl.IsAbs() {
+		if err := downloadOPABundle(ctx, opts, policyBundleFilePath(opts.PolicyUrl)); err != nil {
+			return err
+		}
+	}
+
+	identities, err := querySignerIdentitiesFromPolicy(ctx, opts)
+	if err != nil {
+		return err
+	}
+
+	attestations, err := collectAttestations(ctx, opts, identities)
 	if err != nil {
 		return err
 	}
@@ -53,7 +67,7 @@ func Attest(opts *config.VsaCommandOptions) error {
 	return nil
 }
 
-func collectAttestations(ctx context.Context, opts *config.VsaCommandOptions) ([]oci.Signature, error) {
+func collectAttestations(ctx context.Context, opts *config.VsaCommandOptions, identities []cosign.Identity) ([]oci.Signature, error) {
 	imageRef, err := name.ParseReference(opts.FullArtifactId())
 	if err != nil {
 		return nil, fmt.Errorf("error parsing image uri: %w", err)
@@ -90,16 +104,7 @@ func collectAttestations(ctx context.Context, opts *config.VsaCommandOptions) ([
 		RootCerts:         fulcioRoots,
 		IntermediateCerts: fulcioIntermediates,
 		CTLogPubKeys:      ctLogKeys,
-		Identities: []cosign.Identity{
-			{
-				Issuer:  "https://token.actions.githubusercontent.com",
-				Subject: "https://github.com/liatrio/gh-trusted-builds-workflows/.github/workflows/build-and-push.yaml@refs/heads/main",
-			},
-			{
-				Issuer:  "https://token.actions.githubusercontent.com",
-				Subject: "https://github.com/liatrio/gh-trusted-builds-workflows/.github/workflows/scan-image.yaml@refs/heads/main",
-			},
-		},
+		Identities:        identities,
 	})
 	if err != nil {
 		return nil, err
@@ -112,21 +117,37 @@ func collectAttestations(ctx context.Context, opts *config.VsaCommandOptions) ([
 	return attestations, nil
 }
 
-func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attestations []oci.Signature) (bool, error) {
-	var bundleFilepath string
+func querySignerIdentitiesFromPolicy(ctx context.Context, opts *config.VsaCommandOptions) ([]cosign.Identity, error) {
+	r := rego.New(
+		rego.Query(opts.SignerIdentitiesQuery),
+		rego.EnablePrintStatements(opts.Debug),
+		rego.PrintHook(topdown.NewPrintHook(os.Stderr)),
+		rego.LoadBundle(policyBundleFilePath(opts.PolicyUrl)),
+	)
 
-	if opts.PolicyUrl.IsAbs() {
-		bundleFilepath = "bundle.tar.gz"
-
-		err := downloadOPABundle(ctx, opts.PolicyUrl, bundleFilepath)
-		if err != nil {
-			return false, err
-		}
-	} else {
-		bundleFilepath = opts.PolicyUrl.Path
+	rs, err := r.Eval(ctx)
+	if err != nil {
+		return nil, err
 	}
 
-	query := "data.governance.allow"
+	if len(rs) < 1 {
+		return nil, errors.New("missing signer identities")
+	}
+
+	identitiesJson, err := json.Marshal(rs[0].Expressions[0].Value)
+	if err != nil {
+		return nil, err
+	}
+
+	var identities []cosign.Identity
+	if err = json.Unmarshal(identitiesJson, &identities); err != nil {
+		return nil, err
+	}
+
+	return identities, nil
+}
+
+func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attestations []oci.Signature) (bool, error) {
 	var input []map[string]string
 
 	for _, attestation := range attestations {
@@ -154,13 +175,14 @@ func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attesta
 	}
 
 	r := rego.New(
-		rego.Query(query),
+		rego.Query(opts.PolicyQuery),
 		rego.Input(input),
-		rego.EnablePrintStatements(true),
-		rego.LoadBundle(bundleFilepath),
+		rego.EnablePrintStatements(opts.Debug),
+		rego.PrintHook(topdown.NewPrintHook(os.Stderr)),
+		rego.LoadBundle(policyBundleFilePath(opts.PolicyUrl)),
 	)
 
-	rs, err := r.Eval(context.Background())
+	rs, err := r.Eval(ctx)
 	if err != nil {
 		return false, err
 	}
@@ -168,8 +190,8 @@ func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attesta
 	return rs.Allowed(), nil
 }
 
-func downloadOPABundle(ctx context.Context, bundleUrl *url.URL, outputFilepath string) error {
-	resp, err := http.Get(bundleUrl.String())
+func downloadOPABundle(ctx context.Context, opts *config.VsaCommandOptions, outputFilepath string) error {
+	resp, err := http.Get(opts.PolicyUrl.String())
 	if err != nil {
 		return err
 	}
@@ -187,4 +209,12 @@ func downloadOPABundle(ctx context.Context, bundleUrl *url.URL, outputFilepath s
 	}
 
 	return nil
+}
+
+func policyBundleFilePath(policyUrl *url.URL) string {
+	if policyUrl.IsAbs() {
+		return "bundle.tar.gz"
+	}
+
+	return policyUrl.String()
 }
