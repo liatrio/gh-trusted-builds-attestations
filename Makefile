@@ -22,7 +22,7 @@ vsa:
 	go run $(LDFLAGS) main.go vsa \
 		--artifact-digest "sha256:5f3b045689a0c948418c2dc52086102f59aaeba82784f099f130081c8cac9ed0" \
         --artifact-uri "ghcr.io/liatrio/gh-trusted-builds-app" \
-        --policy-url ../gh-trusted-builds-policy \
+        --policy-url "https://github.com/liatrio/gh-trusted-builds-policy/releases/download/v1.3.0/bundle.tar.gz" \
         --verifier-id "local-verifier"
 
 .PHONY: version
