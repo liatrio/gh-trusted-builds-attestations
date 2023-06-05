@@ -17,6 +17,7 @@ import (
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/intoto"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
 	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/topdown"
 	"github.com/sigstore/cosign/v2/pkg/cosign"
 	"github.com/sigstore/cosign/v2/pkg/oci"
 	rekor "github.com/sigstore/rekor/pkg/client"
@@ -118,8 +119,9 @@ func collectAttestations(ctx context.Context, opts *config.VsaCommandOptions, id
 
 func querySignerIdentitiesFromPolicy(ctx context.Context, opts *config.VsaCommandOptions) ([]cosign.Identity, error) {
 	r := rego.New(
-		rego.Query("data.governance.signer_identities"),
-		rego.EnablePrintStatements(true),
+		rego.Query(opts.SignerIdentitiesQuery),
+		rego.EnablePrintStatements(opts.Debug),
+		rego.PrintHook(topdown.NewPrintHook(os.Stderr)),
 		rego.LoadBundle(policyBundleFilePath(opts.PolicyUrl)),
 	)
 
@@ -146,7 +148,6 @@ func querySignerIdentitiesFromPolicy(ctx context.Context, opts *config.VsaComman
 }
 
 func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attestations []oci.Signature) (bool, error) {
-	query := "data.governance.allow"
 	var input []map[string]string
 
 	for _, attestation := range attestations {
@@ -174,9 +175,10 @@ func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attesta
 	}
 
 	r := rego.New(
-		rego.Query(query),
+		rego.Query(opts.PolicyQuery),
 		rego.Input(input),
-		rego.EnablePrintStatements(true),
+		rego.EnablePrintStatements(opts.Debug),
+		rego.PrintHook(topdown.NewPrintHook(os.Stderr)),
 		rego.LoadBundle(policyBundleFilePath(opts.PolicyUrl)),
 	)
 
