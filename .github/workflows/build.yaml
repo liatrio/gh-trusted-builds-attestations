@@ -1,7 +1,8 @@
 name: app
 on:
   push:
-    branches: *
+    branches:
+      - *
     tags:
       - v*.*.*
 
