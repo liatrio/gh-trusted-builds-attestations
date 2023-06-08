@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net/http"
 	"net/url"
 	"strings"
 
@@ -17,8 +18,11 @@ const (
 	pullRequestFilter = "closed"
 )
 
+type ctxKey struct{}
+
 var (
-	ErrMissingOriginRemote = errors.New("remote 'origin' is not configure")
+	GitHubHttpClientCtxKey = ctxKey{}
+	ErrMissingOriginRemote = errors.New("remote 'origin' is not configured")
 	ErrInvalidRemoteUrl    = errors.New("remote url for 'origin' is invalid")
 	ErrNoGitHubToken       = errors.New("must specify a GitHub token using the GITHUB_TOKEN environment variable")
 	ErrNoRepoSlug          = errors.New("unable to determine GitHub repository slug")
@@ -52,7 +56,13 @@ func New(ctx context.Context, token string) (Client, error) {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
 	)
-	client := github.NewClient(oauth2.NewClient(ctx, ts))
+	httpClient := oauth2.NewClient(ctx, ts)
+
+	if httpClientOverride, ok := ctx.Value(GitHubHttpClientCtxKey).(*http.Client); ok {
+		httpClient = httpClientOverride
+	}
+
+	client := github.NewClient(httpClient)
 
 	return &githubClient{
 		github: client,

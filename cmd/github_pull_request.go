@@ -2,14 +2,15 @@ package cmd
 
 import (
 	"context"
-	"github.com/liatrio/gh-trusted-builds-attestations/internal/attestors"
+
+	"github.com/liatrio/gh-trusted-builds-attestations/internal/attestors/github_pull_request"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 )
 
 type GitHubPullRequest struct {
 	ctx      context.Context
 	opts     *config.GitHubPullRequestCommandOptions
-	attestor *attestors.GitHubPullRequestAttestor
+	attestor *github_pull_request.GitHubPullRequestAttestor
 }
 
 func (g *GitHubPullRequest) Is(s string) bool {
@@ -30,7 +31,7 @@ func (g *GitHubPullRequest) Init(ctx context.Context, flags []string) error {
 	}
 	g.opts = opts
 
-	attestor, err := attestors.NewGitHubPullRequestAttestor(ctx, opts)
+	attestor, err := github_pull_request.NewAttestor(ctx, opts)
 	if err != nil {
 		return err
 	}

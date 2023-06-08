@@ -1,4 +1,4 @@
-package attestors
+package github_pull_request
 
 import (
 	"context"
@@ -9,13 +9,14 @@ import (
 	"sort"
 	"time"
 
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/common"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 
 	"github.com/google/go-github/v52/github"
 	"github.com/in-toto/in-toto-golang/in_toto"
 	pull_request_v1 "github.com/liatrio/gh-trusted-builds-attestations/internal/attestations/github/pull_request/v1"
-	"github.com/liatrio/gh-trusted-builds-attestations/internal/git"
 	gh "github.com/liatrio/gh-trusted-builds-attestations/internal/github"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/sigstore"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/util"
@@ -28,12 +29,18 @@ const (
 	GitHubReviewApprovedState         = "APPROVED"
 )
 
+type ctxKey struct{}
+
+var (
+	GitRepositoryOverrideCtxKey = ctxKey{}
+)
+
 type GitHubPullRequestAttestor struct {
 	github gh.Client
 	signer sigstore.Signer
 }
 
-func NewGitHubPullRequestAttestor(ctx context.Context, opts *config.GitHubPullRequestCommandOptions) (*GitHubPullRequestAttestor, error) {
+func NewAttestor(ctx context.Context, opts *config.GitHubPullRequestCommandOptions) (*GitHubPullRequestAttestor, error) {
 	githubClient, err := gh.New(ctx, opts.GitHubToken)
 	if err != nil {
 		return nil, err
@@ -51,7 +58,7 @@ func NewGitHubPullRequestAttestor(ctx context.Context, opts *config.GitHubPullRe
 }
 
 func (g *GitHubPullRequestAttestor) Attest(ctx context.Context, opts *config.GitHubPullRequestCommandOptions) error {
-	localRepo, err := git.OpenLocalRepository()
+	localRepo, err := openLocalRepository(ctx)
 	if err != nil {
 		return err
 	}
@@ -69,7 +76,7 @@ func (g *GitHubPullRequestAttestor) Attest(ctx context.Context, opts *config.Git
 	// for local development it's useful to be able to control the commit we're attesting, but we don't want to do this in CI
 	devOverrideSha := os.Getenv("GH_PR_ATTESTOR_SHA_OVERRIDE")
 	if devOverrideSha != "" && !inCI() {
-		sha = git.LocalDevSha(devOverrideSha)
+		sha = localDevSha(devOverrideSha)
 	}
 
 	log.Printf("Looking for pull requests in %s at commit %s on %s \n", slug.Name(), sha.Hash().String(), sha.Name().Short())
@@ -221,4 +228,20 @@ func (g *GitHubPullRequestAttestor) createAttestation(ctx context.Context, slug 
 
 func inCI() bool {
 	return os.Getenv("CI") != ""
+}
+
+func localDevSha(sha string) *plumbing.Reference {
+	return plumbing.NewReferenceFromStrings("refs/heads/main", sha)
+}
+
+func openLocalRepository(ctx context.Context) (*git.Repository, error) {
+	if repo, ok := ctx.Value(GitRepositoryOverrideCtxKey).(*git.Repository); ok {
+		return repo, nil
+	}
+
+	wd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("error reading current directory: %v", err)
+	}
+	return git.PlainOpen(wd)
 }

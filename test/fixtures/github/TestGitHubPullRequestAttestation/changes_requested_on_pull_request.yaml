@@ -1,0 +1,335 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        transfer_encoding: []
+        trailer: {}
+        host: api.github.com
+        remote_addr: ""
+        request_uri: ""
+        body: ""
+        form: {}
+        headers:
+            Accept:
+                - application/vnd.github.groot-preview+json
+            User-Agent:
+                - go-github/v52.0.0
+            X-Github-Api-Version:
+                - "2022-11-28"
+        url: https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits/837b35d04c7bb8ce49f289e1c19effd17e51a812/pulls?state=closed
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        transfer_encoding: []
+        trailer: {}
+        content_length: -1
+        uncompressed: true
+        body: '[{"url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4","id":1383306055,"node_id":"PR_kwDOJsozp85Sc5NH","html_url":"https://github.com/liatrio/pr-attestation-fixtures/pull/4","diff_url":"https://github.com/liatrio/pr-attestation-fixtures/pull/4.diff","patch_url":"https://github.com/liatrio/pr-attestation-fixtures/pull/4.patch","issue_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/4","number":4,"state":"closed","locked":false,"title":"feat: changes requested","user":{"login":"alexashley","id":9082799,"node_id":"MDQ6VXNlcjkwODI3OTk=","avatar_url":"https://avatars.githubusercontent.com/u/9082799?v=4","gravatar_id":"","url":"https://api.github.com/users/alexashley","html_url":"https://github.com/alexashley","followers_url":"https://api.github.com/users/alexashley/followers","following_url":"https://api.github.com/users/alexashley/following{/other_user}","gists_url":"https://api.github.com/users/alexashley/gists{/gist_id}","starred_url":"https://api.github.com/users/alexashley/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/alexashley/subscriptions","organizations_url":"https://api.github.com/users/alexashley/orgs","repos_url":"https://api.github.com/users/alexashley/repos","events_url":"https://api.github.com/users/alexashley/events{/privacy}","received_events_url":"https://api.github.com/users/alexashley/received_events","type":"User","site_admin":false},"body":null,"created_at":"2023-06-07T20:12:46Z","updated_at":"2023-06-07T20:52:30Z","closed_at":"2023-06-07T20:52:25Z","merged_at":"2023-06-07T20:52:25Z","merge_commit_sha":"837b35d04c7bb8ce49f289e1c19effd17e51a812","assignee":null,"assignees":[],"requested_reviewers":[],"requested_teams":[],"labels":[],"milestone":null,"draft":false,"commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/commits","review_comments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/comments","review_comment_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/comments{/number}","comments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/4/comments","statuses_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/statuses/e636aeabc620eee6bb07e01a81dc48099868425e","head":{"label":"liatrio:changes-requested","ref":"changes-requested","sha":"e636aeabc620eee6bb07e01a81dc48099868425e","user":{"login":"liatrio","id":5726618,"node_id":"MDEyOk9yZ2FuaXphdGlvbjU3MjY2MTg=","avatar_url":"https://avatars.githubusercontent.com/u/5726618?v=4","gravatar_id":"","url":"https://api.github.com/users/liatrio","html_url":"https://github.com/liatrio","followers_url":"https://api.github.com/users/liatrio/followers","following_url":"https://api.github.com/users/liatrio/following{/other_user}","gists_url":"https://api.github.com/users/liatrio/gists{/gist_id}","starred_url":"https://api.github.com/users/liatrio/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/liatrio/subscriptions","organizations_url":"https://api.github.com/users/liatrio/orgs","repos_url":"https://api.github.com/users/liatrio/repos","events_url":"https://api.github.com/users/liatrio/events{/privacy}","received_events_url":"https://api.github.com/users/liatrio/received_events","type":"Organization","site_admin":false},"repo":{"id":650785703,"node_id":"R_kgDOJsozpw","name":"pr-attestation-fixtures","full_name":"liatrio/pr-attestation-fixtures","private":false,"owner":{"login":"liatrio","id":5726618,"node_id":"MDEyOk9yZ2FuaXphdGlvbjU3MjY2MTg=","avatar_url":"https://avatars.githubusercontent.com/u/5726618?v=4","gravatar_id":"","url":"https://api.github.com/users/liatrio","html_url":"https://github.com/liatrio","followers_url":"https://api.github.com/users/liatrio/followers","following_url":"https://api.github.com/users/liatrio/following{/other_user}","gists_url":"https://api.github.com/users/liatrio/gists{/gist_id}","starred_url":"https://api.github.com/users/liatrio/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/liatrio/subscriptions","organizations_url":"https://api.github.com/users/liatrio/orgs","repos_url":"https://api.github.com/users/liatrio/repos","events_url":"https://api.github.com/users/liatrio/events{/privacy}","received_events_url":"https://api.github.com/users/liatrio/received_events","type":"Organization","site_admin":false},"html_url":"https://github.com/liatrio/pr-attestation-fixtures","description":null,"fork":false,"url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures","forks_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/forks","keys_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/keys{/key_id}","collaborators_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/collaborators{/collaborator}","teams_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/teams","hooks_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/hooks","issue_events_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/events{/number}","events_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/events","assignees_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/assignees{/user}","branches_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/branches{/branch}","tags_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/tags","blobs_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/blobs{/sha}","git_tags_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/tags{/sha}","git_refs_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/refs{/sha}","trees_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/trees{/sha}","statuses_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/statuses/{sha}","languages_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/languages","stargazers_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/stargazers","contributors_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/contributors","subscribers_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/subscribers","subscription_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/subscription","commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits{/sha}","git_commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/commits{/sha}","comments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/comments{/number}","issue_comment_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/comments{/number}","contents_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/contents/{+path}","compare_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/compare/{base}...{head}","merges_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/merges","archive_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/{archive_format}{/ref}","downloads_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/downloads","issues_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues{/number}","pulls_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls{/number}","milestones_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/milestones{/number}","notifications_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/notifications{?since,all,participating}","labels_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/labels{/name}","releases_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/releases{/id}","deployments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/deployments","created_at":"2023-06-07T20:02:04Z","updated_at":"2023-06-07T20:02:31Z","pushed_at":"2023-06-07T20:53:11Z","git_url":"git://github.com/liatrio/pr-attestation-fixtures.git","ssh_url":"git@github.com:liatrio/pr-attestation-fixtures.git","clone_url":"https://github.com/liatrio/pr-attestation-fixtures.git","svn_url":"https://github.com/liatrio/pr-attestation-fixtures","homepage":"","size":6,"stargazers_count":0,"watchers_count":0,"language":null,"has_issues":true,"has_projects":true,"has_downloads":true,"has_wiki":true,"has_pages":false,"has_discussions":false,"forks_count":0,"mirror_url":null,"archived":false,"disabled":false,"open_issues_count":0,"license":null,"allow_forking":true,"is_template":false,"web_commit_signoff_required":false,"topics":["noarchive"],"visibility":"public","forks":0,"open_issues":0,"watchers":0,"default_branch":"main"}},"base":{"label":"liatrio:main","ref":"main","sha":"78b908478388ef75f6f0f62ad6494733103860ec","user":{"login":"liatrio","id":5726618,"node_id":"MDEyOk9yZ2FuaXphdGlvbjU3MjY2MTg=","avatar_url":"https://avatars.githubusercontent.com/u/5726618?v=4","gravatar_id":"","url":"https://api.github.com/users/liatrio","html_url":"https://github.com/liatrio","followers_url":"https://api.github.com/users/liatrio/followers","following_url":"https://api.github.com/users/liatrio/following{/other_user}","gists_url":"https://api.github.com/users/liatrio/gists{/gist_id}","starred_url":"https://api.github.com/users/liatrio/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/liatrio/subscriptions","organizations_url":"https://api.github.com/users/liatrio/orgs","repos_url":"https://api.github.com/users/liatrio/repos","events_url":"https://api.github.com/users/liatrio/events{/privacy}","received_events_url":"https://api.github.com/users/liatrio/received_events","type":"Organization","site_admin":false},"repo":{"id":650785703,"node_id":"R_kgDOJsozpw","name":"pr-attestation-fixtures","full_name":"liatrio/pr-attestation-fixtures","private":false,"owner":{"login":"liatrio","id":5726618,"node_id":"MDEyOk9yZ2FuaXphdGlvbjU3MjY2MTg=","avatar_url":"https://avatars.githubusercontent.com/u/5726618?v=4","gravatar_id":"","url":"https://api.github.com/users/liatrio","html_url":"https://github.com/liatrio","followers_url":"https://api.github.com/users/liatrio/followers","following_url":"https://api.github.com/users/liatrio/following{/other_user}","gists_url":"https://api.github.com/users/liatrio/gists{/gist_id}","starred_url":"https://api.github.com/users/liatrio/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/liatrio/subscriptions","organizations_url":"https://api.github.com/users/liatrio/orgs","repos_url":"https://api.github.com/users/liatrio/repos","events_url":"https://api.github.com/users/liatrio/events{/privacy}","received_events_url":"https://api.github.com/users/liatrio/received_events","type":"Organization","site_admin":false},"html_url":"https://github.com/liatrio/pr-attestation-fixtures","description":null,"fork":false,"url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures","forks_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/forks","keys_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/keys{/key_id}","collaborators_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/collaborators{/collaborator}","teams_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/teams","hooks_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/hooks","issue_events_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/events{/number}","events_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/events","assignees_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/assignees{/user}","branches_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/branches{/branch}","tags_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/tags","blobs_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/blobs{/sha}","git_tags_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/tags{/sha}","git_refs_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/refs{/sha}","trees_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/trees{/sha}","statuses_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/statuses/{sha}","languages_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/languages","stargazers_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/stargazers","contributors_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/contributors","subscribers_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/subscribers","subscription_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/subscription","commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits{/sha}","git_commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/commits{/sha}","comments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/comments{/number}","issue_comment_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/comments{/number}","contents_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/contents/{+path}","compare_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/compare/{base}...{head}","merges_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/merges","archive_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/{archive_format}{/ref}","downloads_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/downloads","issues_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues{/number}","pulls_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls{/number}","milestones_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/milestones{/number}","notifications_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/notifications{?since,all,participating}","labels_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/labels{/name}","releases_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/releases{/id}","deployments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/deployments","created_at":"2023-06-07T20:02:04Z","updated_at":"2023-06-07T20:02:31Z","pushed_at":"2023-06-07T20:53:11Z","git_url":"git://github.com/liatrio/pr-attestation-fixtures.git","ssh_url":"git@github.com:liatrio/pr-attestation-fixtures.git","clone_url":"https://github.com/liatrio/pr-attestation-fixtures.git","svn_url":"https://github.com/liatrio/pr-attestation-fixtures","homepage":"","size":6,"stargazers_count":0,"watchers_count":0,"language":null,"has_issues":true,"has_projects":true,"has_downloads":true,"has_wiki":true,"has_pages":false,"has_discussions":false,"forks_count":0,"mirror_url":null,"archived":false,"disabled":false,"open_issues_count":0,"license":null,"allow_forking":true,"is_template":false,"web_commit_signoff_required":false,"topics":["noarchive"],"visibility":"public","forks":0,"open_issues":0,"watchers":0,"default_branch":"main"}},"_links":{"self":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4"},"html":{"href":"https://github.com/liatrio/pr-attestation-fixtures/pull/4"},"issue":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/4"},"comments":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/4/comments"},"review_comments":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/comments"},"review_comment":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/comments{/number}"},"commits":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/commits"},"statuses":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/statuses/e636aeabc620eee6bb07e01a81dc48099868425e"}},"author_association":"MEMBER","auto_merge":null,"active_lock_reason":null}]'
+        headers:
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset
+            Cache-Control:
+                - private, max-age=60, s-maxage=60
+            Content-Security-Policy:
+                - default-src 'none'
+            Content-Type:
+                - application/json; charset=utf-8
+            Date:
+                - Thu, 08 Jun 2023 13:30:37 GMT
+            Etag:
+                - W/"17b6a60bb373e08b9964bcd128dcb83e416c2d3f6548293cd3cc34f1e9753ae5"
+            Github-Authentication-Token-Expiration:
+                - 2023-07-06 15:02:38 -0400
+            Referrer-Policy:
+                - origin-when-cross-origin, strict-origin-when-cross-origin
+            Server:
+                - GitHub.com
+            Strict-Transport-Security:
+                - max-age=31536000; includeSubdomains; preload
+            Vary:
+                - Accept, Authorization, Cookie, X-GitHub-OTP
+                - Accept-Encoding, Accept, X-Requested-With
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - deny
+            X-Github-Api-Version-Selected:
+                - "2022-11-28"
+            X-Github-Media-Type:
+                - github.v3; param=groot-preview; format=json
+            X-Github-Request-Id:
+                - E1EE:50DE:3232675:6682E09:6481D7FC
+            X-Ratelimit-Limit:
+                - "5000"
+            X-Ratelimit-Remaining:
+                - "4994"
+            X-Ratelimit-Reset:
+                - "1686234637"
+            X-Ratelimit-Resource:
+                - core
+            X-Ratelimit-Used:
+                - "6"
+            X-Xss-Protection:
+                - "0"
+        status: 200 OK
+        code: 200
+        duration: 367.971316ms
+    - id: 1
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        transfer_encoding: []
+        trailer: {}
+        host: api.github.com
+        remote_addr: ""
+        request_uri: ""
+        body: ""
+        form: {}
+        headers:
+            Accept:
+                - application/vnd.github.v3+json
+            User-Agent:
+                - go-github/v52.0.0
+            X-Github-Api-Version:
+                - "2022-11-28"
+        url: https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        transfer_encoding: []
+        trailer: {}
+        content_length: -1
+        uncompressed: true
+        body: '{"url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4","id":1383306055,"node_id":"PR_kwDOJsozp85Sc5NH","html_url":"https://github.com/liatrio/pr-attestation-fixtures/pull/4","diff_url":"https://github.com/liatrio/pr-attestation-fixtures/pull/4.diff","patch_url":"https://github.com/liatrio/pr-attestation-fixtures/pull/4.patch","issue_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/4","number":4,"state":"closed","locked":false,"title":"feat: changes requested","user":{"login":"alexashley","id":9082799,"node_id":"MDQ6VXNlcjkwODI3OTk=","avatar_url":"https://avatars.githubusercontent.com/u/9082799?v=4","gravatar_id":"","url":"https://api.github.com/users/alexashley","html_url":"https://github.com/alexashley","followers_url":"https://api.github.com/users/alexashley/followers","following_url":"https://api.github.com/users/alexashley/following{/other_user}","gists_url":"https://api.github.com/users/alexashley/gists{/gist_id}","starred_url":"https://api.github.com/users/alexashley/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/alexashley/subscriptions","organizations_url":"https://api.github.com/users/alexashley/orgs","repos_url":"https://api.github.com/users/alexashley/repos","events_url":"https://api.github.com/users/alexashley/events{/privacy}","received_events_url":"https://api.github.com/users/alexashley/received_events","type":"User","site_admin":false},"body":null,"created_at":"2023-06-07T20:12:46Z","updated_at":"2023-06-07T20:52:30Z","closed_at":"2023-06-07T20:52:25Z","merged_at":"2023-06-07T20:52:25Z","merge_commit_sha":"837b35d04c7bb8ce49f289e1c19effd17e51a812","assignee":null,"assignees":[],"requested_reviewers":[],"requested_teams":[],"labels":[],"milestone":null,"draft":false,"commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/commits","review_comments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/comments","review_comment_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/comments{/number}","comments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/4/comments","statuses_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/statuses/e636aeabc620eee6bb07e01a81dc48099868425e","head":{"label":"liatrio:changes-requested","ref":"changes-requested","sha":"e636aeabc620eee6bb07e01a81dc48099868425e","user":{"login":"liatrio","id":5726618,"node_id":"MDEyOk9yZ2FuaXphdGlvbjU3MjY2MTg=","avatar_url":"https://avatars.githubusercontent.com/u/5726618?v=4","gravatar_id":"","url":"https://api.github.com/users/liatrio","html_url":"https://github.com/liatrio","followers_url":"https://api.github.com/users/liatrio/followers","following_url":"https://api.github.com/users/liatrio/following{/other_user}","gists_url":"https://api.github.com/users/liatrio/gists{/gist_id}","starred_url":"https://api.github.com/users/liatrio/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/liatrio/subscriptions","organizations_url":"https://api.github.com/users/liatrio/orgs","repos_url":"https://api.github.com/users/liatrio/repos","events_url":"https://api.github.com/users/liatrio/events{/privacy}","received_events_url":"https://api.github.com/users/liatrio/received_events","type":"Organization","site_admin":false},"repo":{"id":650785703,"node_id":"R_kgDOJsozpw","name":"pr-attestation-fixtures","full_name":"liatrio/pr-attestation-fixtures","private":false,"owner":{"login":"liatrio","id":5726618,"node_id":"MDEyOk9yZ2FuaXphdGlvbjU3MjY2MTg=","avatar_url":"https://avatars.githubusercontent.com/u/5726618?v=4","gravatar_id":"","url":"https://api.github.com/users/liatrio","html_url":"https://github.com/liatrio","followers_url":"https://api.github.com/users/liatrio/followers","following_url":"https://api.github.com/users/liatrio/following{/other_user}","gists_url":"https://api.github.com/users/liatrio/gists{/gist_id}","starred_url":"https://api.github.com/users/liatrio/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/liatrio/subscriptions","organizations_url":"https://api.github.com/users/liatrio/orgs","repos_url":"https://api.github.com/users/liatrio/repos","events_url":"https://api.github.com/users/liatrio/events{/privacy}","received_events_url":"https://api.github.com/users/liatrio/received_events","type":"Organization","site_admin":false},"html_url":"https://github.com/liatrio/pr-attestation-fixtures","description":null,"fork":false,"url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures","forks_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/forks","keys_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/keys{/key_id}","collaborators_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/collaborators{/collaborator}","teams_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/teams","hooks_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/hooks","issue_events_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/events{/number}","events_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/events","assignees_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/assignees{/user}","branches_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/branches{/branch}","tags_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/tags","blobs_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/blobs{/sha}","git_tags_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/tags{/sha}","git_refs_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/refs{/sha}","trees_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/trees{/sha}","statuses_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/statuses/{sha}","languages_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/languages","stargazers_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/stargazers","contributors_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/contributors","subscribers_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/subscribers","subscription_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/subscription","commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits{/sha}","git_commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/commits{/sha}","comments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/comments{/number}","issue_comment_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/comments{/number}","contents_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/contents/{+path}","compare_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/compare/{base}...{head}","merges_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/merges","archive_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/{archive_format}{/ref}","downloads_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/downloads","issues_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues{/number}","pulls_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls{/number}","milestones_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/milestones{/number}","notifications_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/notifications{?since,all,participating}","labels_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/labels{/name}","releases_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/releases{/id}","deployments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/deployments","created_at":"2023-06-07T20:02:04Z","updated_at":"2023-06-07T20:02:31Z","pushed_at":"2023-06-07T20:53:11Z","git_url":"git://github.com/liatrio/pr-attestation-fixtures.git","ssh_url":"git@github.com:liatrio/pr-attestation-fixtures.git","clone_url":"https://github.com/liatrio/pr-attestation-fixtures.git","svn_url":"https://github.com/liatrio/pr-attestation-fixtures","homepage":"","size":6,"stargazers_count":0,"watchers_count":0,"language":null,"has_issues":true,"has_projects":true,"has_downloads":true,"has_wiki":true,"has_pages":false,"has_discussions":false,"forks_count":0,"mirror_url":null,"archived":false,"disabled":false,"open_issues_count":0,"license":null,"allow_forking":true,"is_template":false,"web_commit_signoff_required":false,"topics":["noarchive"],"visibility":"public","forks":0,"open_issues":0,"watchers":0,"default_branch":"main"}},"base":{"label":"liatrio:main","ref":"main","sha":"78b908478388ef75f6f0f62ad6494733103860ec","user":{"login":"liatrio","id":5726618,"node_id":"MDEyOk9yZ2FuaXphdGlvbjU3MjY2MTg=","avatar_url":"https://avatars.githubusercontent.com/u/5726618?v=4","gravatar_id":"","url":"https://api.github.com/users/liatrio","html_url":"https://github.com/liatrio","followers_url":"https://api.github.com/users/liatrio/followers","following_url":"https://api.github.com/users/liatrio/following{/other_user}","gists_url":"https://api.github.com/users/liatrio/gists{/gist_id}","starred_url":"https://api.github.com/users/liatrio/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/liatrio/subscriptions","organizations_url":"https://api.github.com/users/liatrio/orgs","repos_url":"https://api.github.com/users/liatrio/repos","events_url":"https://api.github.com/users/liatrio/events{/privacy}","received_events_url":"https://api.github.com/users/liatrio/received_events","type":"Organization","site_admin":false},"repo":{"id":650785703,"node_id":"R_kgDOJsozpw","name":"pr-attestation-fixtures","full_name":"liatrio/pr-attestation-fixtures","private":false,"owner":{"login":"liatrio","id":5726618,"node_id":"MDEyOk9yZ2FuaXphdGlvbjU3MjY2MTg=","avatar_url":"https://avatars.githubusercontent.com/u/5726618?v=4","gravatar_id":"","url":"https://api.github.com/users/liatrio","html_url":"https://github.com/liatrio","followers_url":"https://api.github.com/users/liatrio/followers","following_url":"https://api.github.com/users/liatrio/following{/other_user}","gists_url":"https://api.github.com/users/liatrio/gists{/gist_id}","starred_url":"https://api.github.com/users/liatrio/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/liatrio/subscriptions","organizations_url":"https://api.github.com/users/liatrio/orgs","repos_url":"https://api.github.com/users/liatrio/repos","events_url":"https://api.github.com/users/liatrio/events{/privacy}","received_events_url":"https://api.github.com/users/liatrio/received_events","type":"Organization","site_admin":false},"html_url":"https://github.com/liatrio/pr-attestation-fixtures","description":null,"fork":false,"url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures","forks_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/forks","keys_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/keys{/key_id}","collaborators_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/collaborators{/collaborator}","teams_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/teams","hooks_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/hooks","issue_events_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/events{/number}","events_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/events","assignees_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/assignees{/user}","branches_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/branches{/branch}","tags_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/tags","blobs_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/blobs{/sha}","git_tags_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/tags{/sha}","git_refs_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/refs{/sha}","trees_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/trees{/sha}","statuses_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/statuses/{sha}","languages_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/languages","stargazers_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/stargazers","contributors_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/contributors","subscribers_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/subscribers","subscription_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/subscription","commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits{/sha}","git_commits_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/commits{/sha}","comments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/comments{/number}","issue_comment_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/comments{/number}","contents_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/contents/{+path}","compare_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/compare/{base}...{head}","merges_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/merges","archive_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/{archive_format}{/ref}","downloads_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/downloads","issues_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues{/number}","pulls_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls{/number}","milestones_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/milestones{/number}","notifications_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/notifications{?since,all,participating}","labels_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/labels{/name}","releases_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/releases{/id}","deployments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/deployments","created_at":"2023-06-07T20:02:04Z","updated_at":"2023-06-07T20:02:31Z","pushed_at":"2023-06-07T20:53:11Z","git_url":"git://github.com/liatrio/pr-attestation-fixtures.git","ssh_url":"git@github.com:liatrio/pr-attestation-fixtures.git","clone_url":"https://github.com/liatrio/pr-attestation-fixtures.git","svn_url":"https://github.com/liatrio/pr-attestation-fixtures","homepage":"","size":6,"stargazers_count":0,"watchers_count":0,"language":null,"has_issues":true,"has_projects":true,"has_downloads":true,"has_wiki":true,"has_pages":false,"has_discussions":false,"forks_count":0,"mirror_url":null,"archived":false,"disabled":false,"open_issues_count":0,"license":null,"allow_forking":true,"is_template":false,"web_commit_signoff_required":false,"topics":["noarchive"],"visibility":"public","forks":0,"open_issues":0,"watchers":0,"default_branch":"main"}},"_links":{"self":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4"},"html":{"href":"https://github.com/liatrio/pr-attestation-fixtures/pull/4"},"issue":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/4"},"comments":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/issues/4/comments"},"review_comments":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/comments"},"review_comment":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/comments{/number}"},"commits":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/commits"},"statuses":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/statuses/e636aeabc620eee6bb07e01a81dc48099868425e"}},"author_association":"MEMBER","auto_merge":null,"active_lock_reason":null,"merged":true,"mergeable":null,"rebaseable":null,"mergeable_state":"unknown","merged_by":{"login":"alexashley","id":9082799,"node_id":"MDQ6VXNlcjkwODI3OTk=","avatar_url":"https://avatars.githubusercontent.com/u/9082799?v=4","gravatar_id":"","url":"https://api.github.com/users/alexashley","html_url":"https://github.com/alexashley","followers_url":"https://api.github.com/users/alexashley/followers","following_url":"https://api.github.com/users/alexashley/following{/other_user}","gists_url":"https://api.github.com/users/alexashley/gists{/gist_id}","starred_url":"https://api.github.com/users/alexashley/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/alexashley/subscriptions","organizations_url":"https://api.github.com/users/alexashley/orgs","repos_url":"https://api.github.com/users/alexashley/repos","events_url":"https://api.github.com/users/alexashley/events{/privacy}","received_events_url":"https://api.github.com/users/alexashley/received_events","type":"User","site_admin":false},"comments":0,"review_comments":1,"maintainer_can_modify":false,"commits":1,"additions":1,"deletions":0,"changed_files":1}'
+        headers:
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset
+            Cache-Control:
+                - private, max-age=60, s-maxage=60
+            Content-Security-Policy:
+                - default-src 'none'
+            Content-Type:
+                - application/json; charset=utf-8
+            Date:
+                - Thu, 08 Jun 2023 13:30:38 GMT
+            Etag:
+                - W/"4e32fbc25255046d96629b5fa935b6692e5f156a50334ffa773d11c0a2dd64b4"
+            Github-Authentication-Token-Expiration:
+                - 2023-07-06 15:02:38 -0400
+            Last-Modified:
+                - Wed, 07 Jun 2023 20:52:30 GMT
+            Referrer-Policy:
+                - origin-when-cross-origin, strict-origin-when-cross-origin
+            Server:
+                - GitHub.com
+            Strict-Transport-Security:
+                - max-age=31536000; includeSubdomains; preload
+            Vary:
+                - Accept, Authorization, Cookie, X-GitHub-OTP
+                - Accept-Encoding, Accept, X-Requested-With
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - deny
+            X-Github-Api-Version-Selected:
+                - "2022-11-28"
+            X-Github-Media-Type:
+                - github.v3; format=json
+            X-Github-Request-Id:
+                - E1EE:50DE:323276C:6683009:6481D7FD
+            X-Ratelimit-Limit:
+                - "5000"
+            X-Ratelimit-Remaining:
+                - "4988"
+            X-Ratelimit-Reset:
+                - "1686234637"
+            X-Ratelimit-Resource:
+                - core
+            X-Ratelimit-Used:
+                - "12"
+            X-Xss-Protection:
+                - "0"
+        status: 200 OK
+        code: 200
+        duration: 384.833688ms
+    - id: 2
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        transfer_encoding: []
+        trailer: {}
+        host: api.github.com
+        remote_addr: ""
+        request_uri: ""
+        body: ""
+        form: {}
+        headers:
+            Accept:
+                - application/vnd.github.v3+json
+            User-Agent:
+                - go-github/v52.0.0
+            X-Github-Api-Version:
+                - "2022-11-28"
+        url: https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/commits
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        transfer_encoding: []
+        trailer: {}
+        content_length: -1
+        uncompressed: true
+        body: '[{"sha":"e636aeabc620eee6bb07e01a81dc48099868425e","node_id":"C_kwDOJsozp9oAKGU2MzZhZWFiYzYyMGVlZTZiYjA3ZTAxYTgxZGM0ODA5OTg2ODQyNWU","commit":{"author":{"name":"Alex Ashley","email":"alexashley@users.noreply.github.com","date":"2023-06-07T20:12:42Z"},"committer":{"name":"GitHub","email":"noreply@github.com","date":"2023-06-07T20:12:42Z"},"message":"feat: changes requested","tree":{"sha":"c47c2f2e83b80b374f92c45460a52ce50464d926","url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/trees/c47c2f2e83b80b374f92c45460a52ce50464d926"},"url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/git/commits/e636aeabc620eee6bb07e01a81dc48099868425e","comment_count":0,"verification":{"verified":true,"reason":"valid","signature":"-----BEGIN PGP SIGNATURE-----\n\nwsBcBAABCAAQBQJkgOS6CRBK7hj4Ov3rIwAAzZsIACmB6c+BZJe/93UdVSJpa9FY\nU0nJm35pgBRRozlEQScq9Jl0520bWNZo7+k8YDufJY8ve82CEBshxjD798UAnnU1\n9o2T1MZ170aPu9k1tqL9P4DT3WY5vFI8vIPZ53fHWIEKAlyHSC2MFE38AH51dAja\njm2OgGooSfwM8vD08MJ4haWln6riq8aJU4x1lc6f0zkWTIykiKdeR7uc3QfcdJRH\nJq0claHUNJrOeiWyZ7qz67AY7mWS2I8FzFZVJ/ZCHReSWlSPhTzMxpT3cdH45JXV\nsgXNDKJk5hS0WKHlBzGGTlbQJu5VbntO5rOjdCvhRlKVnD9OoyuTytLMc+oZNkA=\n=euVo\n-----END PGP SIGNATURE-----\n","payload":"tree c47c2f2e83b80b374f92c45460a52ce50464d926\nparent 78b908478388ef75f6f0f62ad6494733103860ec\nauthor Alex Ashley <alexashley@users.noreply.github.com> 1686168762 -0400\ncommitter GitHub <noreply@github.com> 1686168762 -0400\n\nfeat: changes requested"}},"url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits/e636aeabc620eee6bb07e01a81dc48099868425e","html_url":"https://github.com/liatrio/pr-attestation-fixtures/commit/e636aeabc620eee6bb07e01a81dc48099868425e","comments_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits/e636aeabc620eee6bb07e01a81dc48099868425e/comments","author":{"login":"alexashley","id":9082799,"node_id":"MDQ6VXNlcjkwODI3OTk=","avatar_url":"https://avatars.githubusercontent.com/u/9082799?v=4","gravatar_id":"","url":"https://api.github.com/users/alexashley","html_url":"https://github.com/alexashley","followers_url":"https://api.github.com/users/alexashley/followers","following_url":"https://api.github.com/users/alexashley/following{/other_user}","gists_url":"https://api.github.com/users/alexashley/gists{/gist_id}","starred_url":"https://api.github.com/users/alexashley/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/alexashley/subscriptions","organizations_url":"https://api.github.com/users/alexashley/orgs","repos_url":"https://api.github.com/users/alexashley/repos","events_url":"https://api.github.com/users/alexashley/events{/privacy}","received_events_url":"https://api.github.com/users/alexashley/received_events","type":"User","site_admin":false},"committer":{"login":"web-flow","id":19864447,"node_id":"MDQ6VXNlcjE5ODY0NDQ3","avatar_url":"https://avatars.githubusercontent.com/u/19864447?v=4","gravatar_id":"","url":"https://api.github.com/users/web-flow","html_url":"https://github.com/web-flow","followers_url":"https://api.github.com/users/web-flow/followers","following_url":"https://api.github.com/users/web-flow/following{/other_user}","gists_url":"https://api.github.com/users/web-flow/gists{/gist_id}","starred_url":"https://api.github.com/users/web-flow/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/web-flow/subscriptions","organizations_url":"https://api.github.com/users/web-flow/orgs","repos_url":"https://api.github.com/users/web-flow/repos","events_url":"https://api.github.com/users/web-flow/events{/privacy}","received_events_url":"https://api.github.com/users/web-flow/received_events","type":"User","site_admin":false},"parents":[{"sha":"78b908478388ef75f6f0f62ad6494733103860ec","url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits/78b908478388ef75f6f0f62ad6494733103860ec","html_url":"https://github.com/liatrio/pr-attestation-fixtures/commit/78b908478388ef75f6f0f62ad6494733103860ec"}]}]'
+        headers:
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset
+            Cache-Control:
+                - private, max-age=60, s-maxage=60
+            Content-Security-Policy:
+                - default-src 'none'
+            Content-Type:
+                - application/json; charset=utf-8
+            Date:
+                - Thu, 08 Jun 2023 13:30:38 GMT
+            Etag:
+                - W/"72223a090f5a404fe20b8d055f5420f5d9eef0ddda6ac7a79ceaa42e35f2e8af"
+            Github-Authentication-Token-Expiration:
+                - 2023-07-06 15:02:38 -0400
+            Last-Modified:
+                - Wed, 07 Jun 2023 20:52:30 GMT
+            Referrer-Policy:
+                - origin-when-cross-origin, strict-origin-when-cross-origin
+            Server:
+                - GitHub.com
+            Strict-Transport-Security:
+                - max-age=31536000; includeSubdomains; preload
+            Vary:
+                - Accept, Authorization, Cookie, X-GitHub-OTP
+                - Accept-Encoding, Accept, X-Requested-With
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - deny
+            X-Github-Api-Version-Selected:
+                - "2022-11-28"
+            X-Github-Media-Type:
+                - github.v3; format=json
+            X-Github-Request-Id:
+                - E1EE:50DE:3232879:6683211:6481D7FE
+            X-Ratelimit-Limit:
+                - "5000"
+            X-Ratelimit-Remaining:
+                - "4982"
+            X-Ratelimit-Reset:
+                - "1686234637"
+            X-Ratelimit-Resource:
+                - core
+            X-Ratelimit-Used:
+                - "18"
+            X-Xss-Protection:
+                - "0"
+        status: 200 OK
+        code: 200
+        duration: 237.192072ms
+    - id: 3
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        transfer_encoding: []
+        trailer: {}
+        host: api.github.com
+        remote_addr: ""
+        request_uri: ""
+        body: ""
+        form: {}
+        headers:
+            Accept:
+                - application/vnd.github.v3+json
+            User-Agent:
+                - go-github/v52.0.0
+            X-Github-Api-Version:
+                - "2022-11-28"
+        url: https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4/reviews
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        transfer_encoding: []
+        trailer: {}
+        content_length: -1
+        uncompressed: true
+        body: '[{"id":1468533763,"node_id":"PRR_kwDOJsozp85XiAwD","user":{"login":"rcoy-v","id":9846738,"node_id":"MDQ6VXNlcjk4NDY3Mzg=","avatar_url":"https://avatars.githubusercontent.com/u/9846738?u=60ab93e9034285576269ed5f3c1324b343f58565&v=4","gravatar_id":"","url":"https://api.github.com/users/rcoy-v","html_url":"https://github.com/rcoy-v","followers_url":"https://api.github.com/users/rcoy-v/followers","following_url":"https://api.github.com/users/rcoy-v/following{/other_user}","gists_url":"https://api.github.com/users/rcoy-v/gists{/gist_id}","starred_url":"https://api.github.com/users/rcoy-v/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/rcoy-v/subscriptions","organizations_url":"https://api.github.com/users/rcoy-v/orgs","repos_url":"https://api.github.com/users/rcoy-v/repos","events_url":"https://api.github.com/users/rcoy-v/events{/privacy}","received_events_url":"https://api.github.com/users/rcoy-v/received_events","type":"User","site_admin":false},"body":"","state":"CHANGES_REQUESTED","html_url":"https://github.com/liatrio/pr-attestation-fixtures/pull/4#pullrequestreview-1468533763","pull_request_url":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4","author_association":"MEMBER","_links":{"html":{"href":"https://github.com/liatrio/pr-attestation-fixtures/pull/4#pullrequestreview-1468533763"},"pull_request":{"href":"https://api.github.com/repos/liatrio/pr-attestation-fixtures/pulls/4"}},"submitted_at":"2023-06-07T20:43:49Z","commit_id":"e636aeabc620eee6bb07e01a81dc48099868425e"}]'
+        headers:
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset
+            Cache-Control:
+                - private, max-age=60, s-maxage=60
+            Content-Security-Policy:
+                - default-src 'none'
+            Content-Type:
+                - application/json; charset=utf-8
+            Date:
+                - Thu, 08 Jun 2023 13:30:39 GMT
+            Etag:
+                - W/"e2aebfabe97b91705d706ca0fc679dd012afdfd701aa38868ada8a0cb5fff9e8"
+            Github-Authentication-Token-Expiration:
+                - 2023-07-06 15:02:38 -0400
+            Referrer-Policy:
+                - origin-when-cross-origin, strict-origin-when-cross-origin
+            Server:
+                - GitHub.com
+            Strict-Transport-Security:
+                - max-age=31536000; includeSubdomains; preload
+            Vary:
+                - Accept, Authorization, Cookie, X-GitHub-OTP
+                - Accept-Encoding, Accept, X-Requested-With
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - deny
+            X-Github-Api-Version-Selected:
+                - "2022-11-28"
+            X-Github-Media-Type:
+                - github.v3; format=json
+            X-Github-Request-Id:
+                - E1EE:50DE:3232921:668336E:6481D7FE
+            X-Ratelimit-Limit:
+                - "5000"
+            X-Ratelimit-Remaining:
+                - "4976"
+            X-Ratelimit-Reset:
+                - "1686234637"
+            X-Ratelimit-Resource:
+                - core
+            X-Ratelimit-Used:
+                - "24"
+            X-Xss-Protection:
+                - "0"
+        status: 200 OK
+        code: 200
+        duration: 294.775801ms
