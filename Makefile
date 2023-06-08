@@ -1,6 +1,6 @@
 MAKEFLAGS += --silent
 
-BUILD := $(shell git describe --dirty)
+BUILD := $(shell git describe --always --dirty)
 LDFLAGS=-ldflags "-X github.com/liatrio/gh-trusted-builds-attestations/build.Version=$(BUILD)"
 
 .PHONY: build
@@ -34,4 +34,5 @@ help:
 	go run $(LDFLAGS) main.go help
 
 .PHONY: test
+test:
 	./hack/test-run.sh

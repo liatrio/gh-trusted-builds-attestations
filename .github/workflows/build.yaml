@@ -28,9 +28,6 @@ jobs:
           mkdir -p $HOME/.bin/kubectl
           mv kubectl $HOME/.bin/kubectl/
           echo "$HOME/.bin/kubectl" >> $GITHUB_PATH
-      - name: kubectl version
-        run: |
-          kubectl version --client
       - name: Detect Workflow
         id: detect-workflow
         uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow-js@v1.6.0
