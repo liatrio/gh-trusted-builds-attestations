@@ -32,3 +32,6 @@ version:
 .PHONY: help
 help:
 	go run $(LDFLAGS) main.go help
+
+.PHONY: test
+	./hack/test-run.sh

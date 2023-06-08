@@ -19,22 +19,36 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version-file: 'go.mod'
+        # match Kubectl version to kind cluster version used in scaffolding setup
+        # https://github.com/sigstore/scaffolding/blob/8f5907d5dc59c1af0e3c757486105179eab3301a/hack/setup-kind.sh#L80-L81
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          mkdir -p $HOME/.bin/kubectl
+          mv kubectl $HOME/.bin/kubectl/
+          echo "$HOME/.bin/kubectl" >> $GITHUB_PATH
+      - name: kubectl version
+        run: |
+          kubectl version --client
       - name: Detect Workflow
         id: detect-workflow
         uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow-js@v1.6.0
       - name: Sigstore Setup
         uses: sigstore/scaffolding/actions/setup@v0.6.4
         with:
+          k8s-version: "v1.25.x"
           version: "v0.6.4"
-          registry-port: 5001
+      - name: Build
+        run: make build
       - name: Run Tests
         env:
           KEYLESS_ISSUER: "https://token.actions.githubusercontent.com"
           KEYLESS_SUBJECT: ${{ github.server_url }}/${{ github.repository }}/${{ steps.detect-workflow.outputs.workflow }}@${{ steps.detect-workflow.outputs.ref }}
           # the attestation tool expects a value for GITHUB_TOKEN, but interactions with the GitHub API are replayed from fixtures
           GITHUB_TOKEN: "invalid"
-        run: |
-          ./hack/test-run.sh
+          REGISTRY_URL: "registry.local:5000"
+        run: make test
 
   release:
     if: startsWith(github.ref, 'refs/tags/')
