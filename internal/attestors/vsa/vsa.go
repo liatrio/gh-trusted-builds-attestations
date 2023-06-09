@@ -144,8 +144,6 @@ func querySignerIdentitiesFromPolicy(ctx context.Context, opts *config.VsaComman
 		return nil, err
 	}
 
-	fmt.Printf("using identities: %v\n", identities)
-
 	return identities, nil
 }
 

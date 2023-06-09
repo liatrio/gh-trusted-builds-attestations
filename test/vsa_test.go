@@ -164,12 +164,24 @@ func TestVsaCmd(t *testing.T) {
 		Predicate     *verificationSummaryPredicate
 	}
 
+	findInputAttestationByDigest := func(vsa verificationSummaryAttestation, expectedInput *attestationWrapper) *verificationInputAttestation {
+		for _, input := range vsa.Predicate.InputAttestations {
+			actualDigest, ok := input.Digest[expectedInput.digest.Algorithm]
+			if ok && actualDigest == expectedInput.digest.Hex {
+				return &input
+			}
+		}
+
+		return nil
+	}
+
 	type testCase struct {
 		name string
 		int
-		flags       []string
-		assert      func(t *testing.T, artifact *containerImage, inputAttestations []*attestationWrapper, vsa verificationSummaryAttestation)
-		expectedErr string
+		flags           []string
+		assert          func(t *testing.T, artifact *containerImage, inputAttestations []*attestationWrapper, vsa verificationSummaryAttestation)
+		expectedInitErr string
+		expectedRunErr  string
 	}
 
 	testCases := []*testCase{
@@ -196,16 +208,9 @@ func TestVsaCmd(t *testing.T) {
 
 				assert.Len(t, vsa.Predicate.InputAttestations, len(inputs))
 				for _, inputAttestation := range inputs {
-					var actualInput *verificationInputAttestation
-					for _, input := range vsa.Predicate.InputAttestations {
-						actualDigest, ok := input.Digest[inputAttestation.digest.Algorithm]
-						if ok && actualDigest == inputAttestation.digest.Hex {
-							actualInput = &input
-							break
-						}
-					}
-
+					actualInput := findInputAttestationByDigest(vsa, inputAttestation)
 					assert.NotNil(t, actualInput)
+
 					expectedLogEntryUri := fmt.Sprintf("%s/api/v1/log/entries?logIndex=%d", rekorUrl, *inputAttestation.logEntry.LogIndex)
 					assert.Equal(t, expectedLogEntryUri, actualInput.Uri)
 				}
@@ -245,7 +250,33 @@ func TestVsaCmd(t *testing.T) {
 				"--policy-query",
 				"data.governance.always_allow",
 			},
-			expectedErr: "missing signer identities",
+			expectedRunErr: "missing signer identities",
+		},
+		{
+			name: "invalid policy url",
+			flags: []string{
+				"--policy-url",
+				"oci://policy.bundle",
+				"--verifier-id",
+				testVerifierId,
+				"--signer-identities-query",
+				signerIdentitiesQuery,
+				"--policy-query",
+				"data.governance.always_allow",
+			},
+			expectedInitErr: "unsupported scheme provided",
+		},
+		{
+			name: "no policy url flag",
+			flags: []string{
+				"--verifier-id",
+				testVerifierId,
+				"--signer-identities-query",
+				signerIdentitiesQuery,
+				"--policy-query",
+				"data.governance.always_allow",
+			},
+			expectedInitErr: "policy-url must be provided",
 		},
 	}
 
@@ -261,14 +292,17 @@ func TestVsaCmd(t *testing.T) {
 			flags := append(makeGlobalFlags(artifact.digest.String()), tc.flags...)
 			vsaCmd := &cmd.VSA{}
 			err = vsaCmd.Init(ctx, flags)
+			if tc.expectedInitErr != "" {
+				assert.ErrorContains(t, err, tc.expectedInitErr)
+				return
+			}
 			assert.NoError(t, err)
 
 			err = vsaCmd.Run()
-			if tc.expectedErr != "" {
-				assert.ErrorContains(t, err, tc.expectedErr)
+			if tc.expectedRunErr != "" {
+				assert.ErrorContains(t, err, tc.expectedRunErr)
 				return
 			}
-
 			assert.NoError(t, err)
 
 			signatures, err := verifyImageAttestations(ctx, artifact)
@@ -321,17 +355,9 @@ func TestVsaCmd(t *testing.T) {
 
 		assert.Len(t, vsa.Predicate.InputAttestations, len(inputs))
 		for _, inputAttestation := range inputs {
-			var actualInput *verificationInputAttestation
-			for _, input := range vsa.Predicate.InputAttestations {
-				actualDigest, ok := input.Digest[inputAttestation.digest.Algorithm]
-
-				if ok && actualDigest == inputAttestation.digest.Hex {
-					actualInput = &input
-					break
-				}
-			}
-
+			actualInput := findInputAttestationByDigest(vsa, inputAttestation)
 			assert.NotNil(t, actualInput)
+
 			expectedLogEntryUri := fmt.Sprintf("%s/api/v1/log/entries?logIndex=%d", rekorUrl, *inputAttestation.logEntry.LogIndex)
 			assert.Equal(t, expectedLogEntryUri, actualInput.Uri)
 		}

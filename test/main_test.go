@@ -81,11 +81,8 @@ func validUrl(value string) bool {
 	}
 
 	_, err := url.ParseRequestURI(value)
-	if err != nil {
-		return false
-	}
 
-	return true
+	return err == nil
 }
 
 func getEnv(varName, defaultValue string) string {

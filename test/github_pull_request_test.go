@@ -44,6 +44,12 @@ const (
 
 	// https://github.com/liatrio/pr-attestation-fixtures/pull/6
 	commitWithApprovalMultipleReviewsChangesRequestedEndState = "b178ace6bbd65197ea3ceaf425e14b46f7f50c92"
+
+	//https://github.com/liatrio/pr-attestation-fixtures/pull/7
+	commitWithOpenPullRequest = "0f91c0c7bed602604886fe43be7819f7171bea2b"
+
+	// https://github.com/liatrio/pr-attestation-fixtures/pull/8
+	commitWithUnmergedClosedPullRequest = "47ea4c521c7abd69e0c6be8c04d2ec27b60752f6"
 )
 
 func TestGitHubPullRequestCmd(t *testing.T) {
@@ -369,4 +375,37 @@ func TestGitHubPullRequestCmd(t *testing.T) {
 		_, err = verifyImageAttestations(ctx, artifact)
 		assert.ErrorContains(t, err, "no matching attestations")
 	})
+
+	statusTestCases := []*testCase{
+		{
+			name:   "commit is associated with an open pull request",
+			commit: commitWithOpenPullRequest,
+		},
+		{
+			name:   "commit is associated with a closed and unmerged pull request",
+			commit: commitWithUnmergedClosedPullRequest,
+		},
+	}
+
+	for _, tc := range statusTestCases {
+		tc := tc
+
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			r := newGitHubRecorder(t)
+			defer stopRecorder(t, r)
+
+			repo := createGitRepoAtHead(t, tc.commit)
+
+			artifact, err := randomImage()
+			assert.NoError(t, err, "error making random image")
+
+			ctx := makeCtx(r, repo)
+			runAttestationCmd(t, ctx, artifact)
+
+			_, err = verifyImageAttestations(ctx, artifact)
+			assert.ErrorContains(t, err, "no matching attestations", "no pull request attestations should be created")
+		})
+	}
 }
