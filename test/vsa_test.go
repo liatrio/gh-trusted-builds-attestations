@@ -264,13 +264,11 @@ func TestVsaCmd(t *testing.T) {
 			assert.NoError(t, err)
 
 			err = vsaCmd.Run()
-			fmt.Println("expected", tc.expectedErr)
 			if tc.expectedErr != "" {
-				fmt.Println("wtf??", tc.expectedErr)
-				fmt.Println(err)
 				assert.ErrorContains(t, err, tc.expectedErr)
 				return
 			}
+
 			assert.NoError(t, err)
 
 			signatures, err := verifyImageAttestations(ctx, artifact)
