@@ -10,7 +10,7 @@ local_signer_identities := [
 ci_signer_identities := [
     {
         "issuer": "https://token.actions.githubusercontent.com",
-        "subjectRegExp": "^https://github\.com/liatrio/gh-trusted-builds-attestations/\.github/workflows/.*",
+        "subjectRegExp": `^https://github\.com/liatrio/gh-trusted-builds-attestations/\.github/workflows/.*\.yaml@.*`,
     }
 ]
 
