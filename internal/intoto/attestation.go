@@ -6,6 +6,7 @@ import (
 
 	vpb "github.com/in-toto/attestation/go/predicates/vsa/v0"
 	spb "github.com/in-toto/attestation/go/v1"
+	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 	"github.com/sigstore/cosign/v2/pkg/oci"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -77,7 +78,7 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 	}
 
 	statement := &spb.Statement{
-		Type: "https://in-toto.io/Statement/v1",
+		Type: in_toto.StatementInTotoV01,
 		Subject: []*spb.Statement_Subject{{
 			Name: opts.ArtifactUri,
 			Digest: map[string]string{

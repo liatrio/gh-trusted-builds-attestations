@@ -15,10 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Go
-        uses: actions/setup-go@v4
-        with:
-          go-version-file: 'go.mod'
         # match Kubectl version to kind cluster version used in scaffolding setup
         # https://github.com/sigstore/scaffolding/blob/8f5907d5dc59c1af0e3c757486105179eab3301a/hack/setup-kind.sh#L80-L81
       - name: Install kubectl
@@ -36,6 +32,12 @@ jobs:
         with:
           k8s-version: "v1.25.x"
           version: "v0.6.4"
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+      - name: Download Deps
+        run: go mod download
       - name: Build
         run: make build
       - name: Run Tests

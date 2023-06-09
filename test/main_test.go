@@ -186,8 +186,6 @@ func cosignCheckOpts(ctx context.Context) (*cosign.CheckOpts, error) {
 			{
 				Issuer:  expectedKeylessIssuer,
 				Subject: expectedKeylessSubject,
-				//IssuerRegExp:  ".*",
-				//SubjectRegExp: ".*",
 			},
 		},
 	}, nil

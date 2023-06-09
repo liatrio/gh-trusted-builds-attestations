@@ -46,7 +46,7 @@ const (
 	commitWithApprovalMultipleReviewsChangesRequestedEndState = "b178ace6bbd65197ea3ceaf425e14b46f7f50c92"
 )
 
-func TestGitHubPullRequestAttestation(t *testing.T) {
+func TestGitHubPullRequestCmd(t *testing.T) {
 	t.Parallel()
 
 	type prAttestation struct {
@@ -65,9 +65,8 @@ func TestGitHubPullRequestAttestation(t *testing.T) {
 		}
 
 		r, err := recorder.NewWithOptions(&recorder.Options{
-			CassetteName: filepath.Join("fixtures", "github", t.Name()),
-			Mode:         recorder.ModeRecordOnce,
-			//Mode:          recorder.ModeRecordOnly,
+			CassetteName:  filepath.Join("fixtures", "github", t.Name()),
+			Mode:          recorder.ModeReplayOnly,
 			RealTransport: oauth2Transport,
 		})
 		assert.NoError(t, err, "error creating HTTP recorder")
