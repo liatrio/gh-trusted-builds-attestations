@@ -24,9 +24,6 @@ jobs:
           mkdir -p $HOME/.bin/kubectl
           mv kubectl $HOME/.bin/kubectl/
           echo "$HOME/.bin/kubectl" >> $GITHUB_PATH
-      - name: Detect Workflow
-        id: detect-workflow
-        uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow-js@v1.6.0
       - name: Sigstore Setup
         uses: sigstore/scaffolding/actions/setup@v0.6.4
         with:
@@ -42,8 +39,6 @@ jobs:
         run: make build
       - name: Run Tests
         env:
-          KEYLESS_ISSUER: "https://token.actions.githubusercontent.com"
-          KEYLESS_SUBJECT: ${{ github.server_url }}/${{ github.repository }}/${{ steps.detect-workflow.outputs.workflow }}@${{ steps.detect-workflow.outputs.ref }}
           # the attestation tool expects a value for GITHUB_TOKEN, but interactions with the GitHub API are replayed from fixtures
           GITHUB_TOKEN: "invalid"
           REGISTRY_URL: "registry.local:5000"

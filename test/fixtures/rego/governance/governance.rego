@@ -1,7 +1,5 @@
 package governance
 
-env := opa.runtime().env
-
 local_signer_identities := [
     {
         "issuer": "https://kubernetes.default.svc.cluster.local",
@@ -11,8 +9,8 @@ local_signer_identities := [
 
 ci_signer_identities := [
     {
-        "issuer": env["KEYLESS_ISSUER"],
-        "subject": env["KEYLESS_SUBJECT"],
+        "issuer": "https://token.actions.githubusercontent.com",
+        "subjectRegExp": "^https://github\.com/liatrio/gh-trusted-builds-attestations/\.github/workflows/.*",
     }
 ]
 
