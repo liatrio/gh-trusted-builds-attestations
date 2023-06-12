@@ -1,13 +1,20 @@
 package test
 
 import (
+	"archive/tar"
 	"bytes"
+	"compress/gzip"
 	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
+	"net"
+	"net/http"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -137,6 +144,53 @@ func TestVsaCmd(t *testing.T) {
 		assert.NoError(t, err, "error marshalling attestation")
 
 		return signAttestation(t, artifact, payload)
+	}
+
+	makePolicyBundle := func(t *testing.T) string {
+		t.Helper()
+
+		tmpDir, err := os.MkdirTemp(os.TempDir(), "remote-policy-bundle-*")
+		assert.NoError(t, err)
+
+		bundleFileName := filepath.Join(tmpDir, "bundle.tar.gz")
+		bundleTgz, err := os.Create(bundleFileName)
+		assert.NoError(t, err)
+		defer bundleTgz.Close()
+
+		gzipWriter := gzip.NewWriter(bundleTgz)
+
+		defer gzipWriter.Close()
+
+		tarWriter := tar.NewWriter(gzipWriter)
+		defer tarWriter.Close()
+
+		governanceDir := filepath.Join("fixtures", "rego", "governance")
+		entries, err := os.ReadDir(governanceDir)
+		assert.NoError(t, err)
+
+		for _, entry := range entries {
+			if entry.IsDir() {
+				continue
+			}
+
+			file, err := os.Open(filepath.Join(governanceDir, entry.Name()))
+			assert.NoError(t, err)
+
+			fileStat, err := file.Stat()
+			assert.NoError(t, err)
+
+			header, err := tar.FileInfoHeader(fileStat, fileStat.Name())
+			assert.NoError(t, err)
+
+			header.Name = filepath.Join("governance", fileStat.Name())
+
+			assert.NoError(t, tarWriter.WriteHeader(header))
+
+			_, err = io.Copy(tarWriter, file)
+			assert.NoError(t, err)
+		}
+
+		return bundleFileName
 	}
 
 	type verificationInputAttestation struct {
@@ -387,5 +441,69 @@ func TestVsaCmd(t *testing.T) {
 
 		err = vsaCmd.Run()
 		assert.ErrorContains(t, err, "no matching attestations")
+	})
+
+	t.Run("remote policy bundle", func(t *testing.T) {
+		t.Parallel()
+
+		ctx := context.Background()
+		policyBundle := makePolicyBundle(t)
+		fmt.Println("policy bundle", policyBundle)
+
+		lis, err := net.Listen("tcp", ":0")
+		assert.NoError(t, err)
+		fileServer := http.FileServer(http.Dir(filepath.Dir(policyBundle)))
+		mux := http.NewServeMux()
+		mux.Handle("/", fileServer)
+
+		s := &http.Server{
+			Addr:    ":0",
+			Handler: mux,
+		}
+
+		go func() {
+			err := s.Serve(lis)
+			if err != nil && !errors.Is(err, http.ErrServerClosed) {
+				t.Log("http serve error:", err)
+			}
+		}()
+
+		defer func() {
+			assert.NoError(t, s.Shutdown(ctx))
+		}()
+
+		artifact, err := randomImage()
+		assert.NoError(t, err, "error making random image")
+
+		_ = makeFakeAttestation(t, artifact)
+
+		fsPort := lis.Addr().(*net.TCPAddr).Port
+		remotePolicyBundleUri := fmt.Sprintf("http://localhost:%d/bundle.tar.gz", fsPort)
+
+		flags := append(makeGlobalFlags(artifact.digest.String()),
+			"--policy-url",
+			remotePolicyBundleUri,
+			"--verifier-id",
+			testVerifierId,
+			"--signer-identities-query",
+			signerIdentitiesQuery,
+			"--policy-query",
+			"data.governance.always_allow",
+		)
+
+		vsaCmd := &cmd.VSA{}
+		err = vsaCmd.Init(ctx, flags)
+		assert.NoError(t, err)
+		assert.NoError(t, vsaCmd.Run())
+
+		signatures, err := verifyImageAttestations(ctx, artifact)
+		assert.NoError(t, err)
+
+		allAttestations, err := filterAttestations[verificationSummaryAttestation](signatures, verificationSummaryPredicateType)
+		assert.NoError(t, err)
+
+		assert.Len(t, allAttestations, 1, "expected a single VSA")
+		vsa := allAttestations[0]
+		assert.Equal(t, remotePolicyBundleUri, vsa.Predicate.Policy.Uri)
 	})
 }
