@@ -30,7 +30,7 @@ kubectl -n tuf-system get secrets tuf-root -oyaml | sed 's/namespace: .*/namespa
 
 # overwrite the hard-coded registry in the release
 # https://github.com/sigstore/scaffolding/pull/547
-sed -i "s/registry.local:5000/${REGISTRY_URL}/g" testrelease.yaml
+sed -i.bak "s/registry.local:5000/${REGISTRY_URL}/g" testrelease.yaml
 
 kubectl apply -f testrelease.yaml
 
