@@ -12,4 +12,6 @@ if [ -z "${CI-}" ]; then
   export ID_TOKEN=$(curl --fail -s "${GET_TOKEN_ENDPOINT}")
 fi
 
+# a valid token is only needed when recording new fixtures
+export GITHUB_TOKEN=${GITHUB_TOKEN-"invalid"}
 go test -v -count 1 ./...
