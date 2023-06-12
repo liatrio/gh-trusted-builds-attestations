@@ -159,16 +159,18 @@ func TestGitHubPullRequestCmd(t *testing.T) {
 			commit: commitWithApproval,
 			assert: func(t *testing.T, artifact *containerImage, attestation prAttestation) {
 				assert.Len(t, attestation.Subject, 2, "attestation should have 2 subjects")
-				// first subject is the commit created from the pull request
-				assert.Equal(t, attestation.Subject[0].Name, fmt.Sprintf("git+%s.git", githubPrFixtureRepository))
-				assert.Equal(t, attestation.Subject[0].Digest, common.DigestSet{
-					"sha1": commitWithApproval,
-				})
-				// second subject is the image
-				assert.Equal(t, attestation.Subject[1].Name, testImageName())
-				assert.Equal(t, attestation.Subject[1].Digest, common.DigestSet{
-					artifact.digest.Algorithm: artifact.digest.Hex,
-				})
+				assert.Contains(t, attestation.Subject, in_toto.Subject{
+					Name: fmt.Sprintf("git+%s.git", githubPrFixtureRepository),
+					Digest: common.DigestSet{
+						"sha1": commitWithApproval,
+					},
+				}, "expected the pull request commit to be included in the list of subjects")
+				assert.Contains(t, attestation.Subject, in_toto.Subject{
+					Name: testImageName(),
+					Digest: common.DigestSet{
+						artifact.digest.Algorithm: artifact.digest.Hex,
+					},
+				}, "expected the container image to be included in the list of subjects")
 
 				assert.WithinDurationf(t, time.Now(), attestation.Predicate.PredicateCreatedAt, time.Minute, "expected attestation to have been created recently")
 				assert.Equal(t, &pull_request_v1.Predicate{
