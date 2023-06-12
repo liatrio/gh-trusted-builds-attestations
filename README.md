@@ -154,14 +154,29 @@ This application includes a suite of integration tests that verify the different
 - [`yq`](https://github.com/mikefarah/yq)
 - [`kubectl`](https://kubernetes.io/docs/reference/kubectl/)
 
-First, run `make test-setup`. This will download resources from the Sigstore [scaffolding repo](https://github.com/sigstore/scaffolding), stand up a kind cluster, and deploy Rekor & Fulcio.
+First, add the following entries to `/etc/hosts`:
+
+```
+127.0.0.1 registry.local
+127.0.0.1 rekor.rekor-system.svc
+127.0.0.1 fulcio.fulcio-system.svc
+127.0.0.1 ctlog.ctlog-system.svc
+127.0.0.1 gettoken.default.svc
+127.0.0.1 tuf.tuf-system.svc
+```
+
+Next, run `make test-setup`. This will download resources from the Sigstore [scaffolding repo](https://github.com/sigstore/scaffolding), stand up a kind cluster, and deploy Rekor & Fulcio.
 It will also create a TUF root that's used by the tests. The setup should take 5-10 minutes. It only needs to be run once.
 
 ⚠️ WARNING: The tests run the equivalent of `cosign initialize`, meaning that if you have a custom TUF root configured, it will be temporarily overwritten in place of the TUF root created
 by the scaffolding setup. The tests will attempt to save the TUF root in `~/.sigstore-backup` before running, and restore it after. If the tests fail to restore the custom root, you can remove it by running `rm -rf ~/.sigstore` and `mv ~/.sigstore-backup ~/.sigstore`.
 If you're not using a custom TUF root, deleting the `~/.sigstore` directory should suffice.
 
-Next, run `make test` to start the tests. Unfortunately, there's some noise in the output, but you can usually ignore these logs about the TUF root metadata:
+Next, run `make test` to start the tests. Unfortunately, there's some noise in the output, but you can usually ignore these logs about port-forwarding:
+
+> Handling connection for 8080
+
+as well as the logs about issues with the TUF root metadata:
 
 ```
 **Warning** Custom metadata not configured properly for target tsa_intermediate_0.crt.pem, skipping target
@@ -179,11 +194,7 @@ BQAwfjEMMAoGA1UEBhMDVVNBMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQH
 ...
 ```
 
-Lastly, once you're done testing, you can run `make test-teardown` to destroy the kind cluster. Optionally, you can remove this entry from `/etc/hosts` as well:
-
-```
-127.0.0.1 registry.local
-```
+Lastly, once you're done testing, you can run `make test-teardown` to destroy the kind cluster. Optionally, you can also remove the entries from `/etc/hosts` that were added in the first step.
 
 #### GitHub API
 
@@ -194,7 +205,10 @@ These responses are stored in `test/fixtures/github`, organized by test name.
 The fixture data is from [`liatrio/pr-attestation-fixtures`](https://github.com/liatrio/pr-attestation-fixtures).
 If you need to add a fixture for a new scenario, you can make changes in that repository.
 
-Next, set `GITHUB_TOKEN` to a valid personal access token with the permission to read the fixture repository.
+Next, set `GITHUB_TOKEN` to a fine-grained personal access token with the following scopes for the `liatrio/pr-attestation-fixtures` repository:
+ - `contents` (read-only)
+ - `metadata` (read-only)
+ - `pull-requests` (read-only)
 
 Finally, change the mode on GitHub API recorder to `recorder.ModeRecordOnce` (if you're adding a new test) or `recorder.ModeReplayWithNewEpisodes` (if you're making changes to an existing test).
 

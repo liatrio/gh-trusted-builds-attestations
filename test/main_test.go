@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/url"
@@ -35,10 +36,10 @@ var (
 
 	githubToken = getEnv("GITHUB_TOKEN", "")
 	idToken     = getEnv("ID_TOKEN", "")
-	fulcioUrl   = getEnv("FULCIO_URL", "")
-	rekorUrl    = getEnv("REKOR_URL", "")
+	fulcioUrl   = getEnv("FULCIO_URL", "http://fulcio.fulcio-system.svc:8080")
+	rekorUrl    = getEnv("REKOR_URL", "http://rekor.rekor-system.svc:8080")
 	tufRoot     = getEnv("TUF_ROOT", "root.json")
-	tufMirror   = getEnv("TUF_MIRROR", "")
+	tufMirror   = getEnv("TUF_MIRROR", "http://tuf.tuf-system.svc:8080")
 	registryUrl = getEnv("REGISTRY_URL", "registry.local:5001")
 
 	expectedKeylessIssuer  = getEnv("KEYLESS_ISSUER", "https://kubernetes.default.svc.cluster.local")
@@ -78,13 +79,16 @@ func TestMain(m *testing.M) {
 		log.Fatalln("error initializing TUF root", err)
 	}
 
-	exitCode := m.Run()
+	var exitCode int
+	defer func() {
+		if err := restoreTufRoot(); err != nil {
+			log.Fatalln("error restoring TUF root", err)
+		}
 
-	if err = restoreTufRoot(); err != nil {
-		log.Fatalln("error restoring TUF root", err)
-	}
+		os.Exit(exitCode)
+	}()
 
-	os.Exit(exitCode)
+	exitCode = m.Run()
 }
 
 func validUrl(value string) bool {
@@ -106,8 +110,14 @@ func saveTufRoot() error {
 	sigstoreDir := filepath.Join(homeDir, sigstoreConfigDir)
 	backupDir := filepath.Join(homeDir, backupConfigDir)
 
+	if fileExists(backupDir) {
+		if err = os.RemoveAll(backupDir); err != nil {
+			return err
+		}
+	}
+
 	// if the Sigstore config directory doesn't exist, we're using the root baked into cosign, so there's nothing to persist
-	if _, err = os.Stat(sigstoreDir); err != nil {
+	if !fileExists(sigstoreDir) {
 		return nil
 	}
 
@@ -127,11 +137,20 @@ func restoreTufRoot() error {
 		return err
 	}
 
-	if _, err = os.Stat(backupDir); err != nil {
+	if !fileExists(backupDir) {
 		return nil
 	}
 
 	return os.Rename(backupDir, sigstoreDir)
+}
+
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	if errors.Is(err, os.ErrNotExist) {
+		return false
+	}
+
+	return true
 }
 
 func getEnv(varName, defaultValue string) string {

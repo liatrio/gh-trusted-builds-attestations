@@ -65,6 +65,7 @@ func TestVsaCmd(t *testing.T) {
 
 		ctx := context.Background()
 		signer, err := sign.SignerFromKeyOpts(ctx, "", "", options.KeyOpts{
+
 			IDToken:   idToken,
 			FulcioURL: fulcioUrl,
 			RekorURL:  rekorUrl,
