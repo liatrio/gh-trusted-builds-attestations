@@ -40,6 +40,8 @@ jobs:
         run: go mod download
       - name: Build
         run: make build
+      - name: Move TUF root
+        run: mv root.json test/
       - name: Run Tests
         env:
           KEYLESS_ISSUER: "https://token.actions.githubusercontent.com"

@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/google/go-containerregistry/pkg/name"
@@ -29,11 +30,14 @@ const (
 )
 
 var (
+	sigstoreConfigDir = ".sigstore"
+	backupConfigDir   = ".sigstore-backup"
+
 	githubToken = getEnv("GITHUB_TOKEN", "")
 	idToken     = getEnv("ID_TOKEN", "")
 	fulcioUrl   = getEnv("FULCIO_URL", "")
 	rekorUrl    = getEnv("REKOR_URL", "")
-	tufRoot     = getEnv("TUF_ROOT", "../root.json")
+	tufRoot     = getEnv("TUF_ROOT", "root.json")
 	tufMirror   = getEnv("TUF_MIRROR", "")
 	registryUrl = getEnv("REGISTRY_URL", "registry.local:5001")
 
@@ -61,6 +65,10 @@ func TestMain(m *testing.M) {
 		}
 	}
 
+	if err := saveTufRoot(); err != nil {
+		log.Fatalln("error stashing existing TUF root", err)
+	}
+
 	rootJson, err := blob.LoadFileOrURL(tufRoot)
 	if err != nil {
 		log.Fatalln("error loading TUF root", err)
@@ -71,7 +79,11 @@ func TestMain(m *testing.M) {
 	}
 
 	exitCode := m.Run()
-	// TODO: clean up by restoring old root
+
+	if err = restoreTufRoot(); err != nil {
+		log.Fatalln("error restoring TUF root", err)
+	}
+
 	os.Exit(exitCode)
 }
 
@@ -83,6 +95,43 @@ func validUrl(value string) bool {
 	_, err := url.ParseRequestURI(value)
 
 	return err == nil
+}
+
+func saveTufRoot() error {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+
+	sigstoreDir := filepath.Join(homeDir, sigstoreConfigDir)
+	backupDir := filepath.Join(homeDir, backupConfigDir)
+
+	// if the Sigstore config directory doesn't exist, we're using the root baked into cosign, so there's nothing to persist
+	if _, err = os.Stat(sigstoreDir); err != nil {
+		return nil
+	}
+
+	return os.Rename(sigstoreDir, backupDir)
+}
+
+func restoreTufRoot() error {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+
+	sigstoreDir := filepath.Join(homeDir, sigstoreConfigDir)
+	backupDir := filepath.Join(homeDir, backupConfigDir)
+
+	if err = os.RemoveAll(sigstoreDir); err != nil {
+		return err
+	}
+
+	if _, err = os.Stat(backupDir); err != nil {
+		return nil
+	}
+
+	return os.Rename(backupDir, sigstoreDir)
 }
 
 func getEnv(varName, defaultValue string) string {

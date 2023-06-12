@@ -7,6 +7,10 @@ kind delete clusters kind
 
 echo "Stopping registry container"
 docker stop registry.local
+docker rm registry.local
 
 echo "Deleting kind network"
 docker network rm kind
+
+echo "Deleting TUF root"
+rm test/root.json

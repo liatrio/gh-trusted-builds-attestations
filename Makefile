@@ -33,6 +33,14 @@ version:
 help:
 	go run $(LDFLAGS) main.go help
 
+.PHONY: test-setup
+test-setup:
+	./hack/test-setup.sh
+
 .PHONY: test
 test:
 	./hack/test-run.sh
+
+.PHONY:
+test-teardown:
+	./hack/test-teardown.sh
