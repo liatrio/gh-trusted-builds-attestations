@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/attestors/vsa"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 )

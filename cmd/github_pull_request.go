@@ -10,7 +10,7 @@ import (
 type GitHubPullRequest struct {
 	ctx      context.Context
 	opts     *config.GitHubPullRequestCommandOptions
-	attestor *github_pull_request.GitHubPullRequestAttestor
+	attestor *github_pull_request.Attestor
 }
 
 func (g *GitHubPullRequest) Is(s string) bool {

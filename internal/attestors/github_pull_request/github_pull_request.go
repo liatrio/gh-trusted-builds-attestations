@@ -35,12 +35,12 @@ var (
 	GitRepositoryOverrideCtxKey = ctxKey{}
 )
 
-type GitHubPullRequestAttestor struct {
+type Attestor struct {
 	github gh.Client
 	signer sigstore.Signer
 }
 
-func NewAttestor(ctx context.Context, opts *config.GitHubPullRequestCommandOptions) (*GitHubPullRequestAttestor, error) {
+func NewAttestor(ctx context.Context, opts *config.GitHubPullRequestCommandOptions) (*Attestor, error) {
 	githubClient, err := gh.New(ctx, opts.GitHubToken)
 	if err != nil {
 		return nil, err
@@ -51,13 +51,13 @@ func NewAttestor(ctx context.Context, opts *config.GitHubPullRequestCommandOptio
 		return nil, err
 	}
 
-	return &GitHubPullRequestAttestor{
+	return &Attestor{
 		github: githubClient,
 		signer: signer,
 	}, nil
 }
 
-func (g *GitHubPullRequestAttestor) Attest(ctx context.Context, opts *config.GitHubPullRequestCommandOptions) error {
+func (g *Attestor) Attest(ctx context.Context, opts *config.GitHubPullRequestCommandOptions) error {
 	localRepo, err := openLocalRepository(ctx)
 	if err != nil {
 		return err
@@ -130,11 +130,11 @@ func (g *GitHubPullRequestAttestor) Attest(ctx context.Context, opts *config.Git
 	return nil
 }
 
-func (g *GitHubPullRequestAttestor) Name() string {
+func (g *Attestor) Name() string {
 	return GitHubPullRequestAttestorName
 }
 
-func (g *GitHubPullRequestAttestor) createAttestation(ctx context.Context, slug *gh.RepositorySlug, pr *github.PullRequest) (*in_toto.Statement, error) {
+func (g *Attestor) createAttestation(ctx context.Context, slug *gh.RepositorySlug, pr *github.PullRequest) (*in_toto.Statement, error) {
 	commits, err := g.github.ListPullRequestCommits(ctx, slug, pr.GetNumber())
 	if err != nil {
 		return nil, err
