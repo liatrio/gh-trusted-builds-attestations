@@ -2,3 +2,4 @@
 bundle.tar.gz
 *.predicate.json
 attestation
+test/root.json

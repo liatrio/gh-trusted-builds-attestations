@@ -14,6 +14,7 @@ type GlobalOptions struct {
 	OidcClientId,
 	FulcioUrl,
 	RekorUrl,
+	IdToken,
 	ArtifactUri string
 	ArtifactDigest *Digest
 }
@@ -66,10 +67,12 @@ func (g *GlobalOptions) AddFlags(fs *flag.FlagSet) {
 	fs.StringVar(&g.OidcClientId, "oidc-client-id", "sigstore", "OIDC client id for keyless signing")
 	fs.StringVar(&g.ArtifactDigest.Value, "artifact-digest", "", "Digest of the OCI artifact. Should be prefixed with the digest hash type, e.g., sha256:60bcfdd2...")
 	fs.StringVar(&g.ArtifactUri, "artifact-uri", "", "URI of the OCI artifact")
+	fs.StringVar(&g.IdToken, "id-token", "", "ID token to use for keyless signing")
 }
 
 func (g *GlobalOptions) KeyOpts() options.KeyOpts {
 	return options.KeyOpts{
+		IDToken:      g.IdToken,
 		OIDCIssuer:   g.OidcIssuerUrl,
 		OIDCClientID: g.OidcClientId,
 		FulcioURL:    g.FulcioUrl,

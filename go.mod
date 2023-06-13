@@ -13,8 +13,10 @@ require (
 	github.com/sigstore/cosign/v2 v2.0.2
 	github.com/sigstore/rekor v1.1.0
 	github.com/sigstore/sigstore v1.6.3
+	github.com/stretchr/testify v1.8.4
 	golang.org/x/oauth2 v0.7.0
 	google.golang.org/protobuf v1.30.0
+	gopkg.in/dnaeon/go-vcr.v3 v3.1.2
 )
 
 require (
@@ -152,6 +154,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/sassoftware/relic v7.2.1+incompatible // indirect
 	github.com/segmentio/ksuid v1.0.4 // indirect

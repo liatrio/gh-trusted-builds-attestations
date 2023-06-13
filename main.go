@@ -2,15 +2,15 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"github.com/liatrio/gh-trusted-builds-attestations/cmd"
 	"log"
 	"os"
+
+	"github.com/liatrio/gh-trusted-builds-attestations/cmd"
 )
 
 func main() {
 	if len(os.Args) < 2 {
-		log.Fatal(fmt.Errorf("no subcommand give, please run `help` for more information"))
+		log.Fatal("no subcommand given, please run `help` for more information")
 	}
 
 	ctx := context.Background()
@@ -40,5 +40,5 @@ func main() {
 		}
 	}
 
-	log.Fatal(fmt.Errorf("no matching subcommand given, please run `help` for more information"))
+	log.Fatal("no matching subcommand given, please run `help` for more information")
 }
