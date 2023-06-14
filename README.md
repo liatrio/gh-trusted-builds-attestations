@@ -29,6 +29,8 @@ All attestation types may use or require these flags.
 
 `--oidc-client-id`: Defaults to `sigstore`.
 
+`--id-token`: An optional flag to specify an id token to use for keyless signing.
+
 `--artifact-uri`: **required** URI of the OCI artifact i.e., the subject of the attestation.
 ex: `ghcr.io/liatrio/gh-trusted-builds-app`
 
@@ -112,16 +114,31 @@ The following process is used to create a VSA:
 
 ##### Command Flags
 
+`--debug`: Emit print logs from policy evaluation. Defaults to `false`
+
+`--policy-query`: The Rego query to use when evaluating the policy. Defaults to `data.governance.allow`.
+
 `--policy-url`: Location of policy bundle that will be used to determine VSA result.
 Supports http(s) urls for unauthenticated external downloads.
 Absolute and relative paths can be used for an existing, local bundle.
 
 Examples:
 
-- `https://github.com/liatrio/gh-trusted-builds-policy/releases/download/v1.1.1/bundle.tar.gz`
+- `https://github.com/liatrio/gh-trusted-builds-policy/releases/download/v1.4.0/bundle.tar.gz`
 - `bundle.tar.gz`
 - `../bundle.tar.gz`
 - `/Users/myhome/bundle.tar.gz`
+
+`--signer-identities-query`: A Rego query that should specify the expected attestation signer identities. The result should be a list of objects that can be unmarshalled into `cosign.Identity`. Defaults to `data.governance.signer_identities`.
+
+```rego
+[
+    {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "subjectRegExp": `^https://github\.com/liatrio/gh-trusted-builds-workflows/\.github/workflows/build-and-push\.yaml@.*`,
+    }
+]
+```
 
 `--verifier-id`: ID of entity verifying the policy for the VSA.
 
@@ -130,12 +147,6 @@ Examples:
 - Subcommand: `version`
 
 Prints the build version information of the application.
-
-#### Help
-
-- Subcommand: `help`
-
-Prints the available subcommands that can be executed.
 
 ## Local Development
 
