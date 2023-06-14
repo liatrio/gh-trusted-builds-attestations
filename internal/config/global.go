@@ -8,7 +8,6 @@ import (
 
 	"github.com/sigstore/cosign/v2/cmd/cosign/cli/options"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 var (
@@ -25,11 +24,6 @@ type GlobalOptions struct {
 	ArtifactUri string
 	ArtifactDigest *DigestValue
 }
-
-var (
-	_ pflag.Value = &UrlValue{}
-	_ pflag.Value = &DigestValue{}
-)
 
 type UrlValue struct {
 	allowRelative bool
