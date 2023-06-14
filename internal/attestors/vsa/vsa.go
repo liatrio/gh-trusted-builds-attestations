@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/google/go-containerregistry/pkg/name"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
@@ -191,7 +192,14 @@ func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attesta
 }
 
 func downloadOPABundle(ctx context.Context, opts *config.VsaCommandOptions, outputFilepath string) error {
-	resp, err := http.Get(opts.PolicyUrl.String())
+	client := http.Client{Timeout: time.Minute}
+
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, opts.PolicyUrl.String(), nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := client.Do(request)
 	if err != nil {
 		return err
 	}
