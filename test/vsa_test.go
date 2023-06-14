@@ -236,7 +236,7 @@ func TestVsaCmd(t *testing.T) {
 		flags           []string
 		assert          func(t *testing.T, artifact *containerImage, inputAttestations []*attestationWrapper, vsa verificationSummaryAttestation)
 		expectedInitErr string
-		expectedRunErr  string
+		expectedErr     string
 	}
 
 	testCases := []*testCase{
@@ -305,7 +305,7 @@ func TestVsaCmd(t *testing.T) {
 				"--policy-query",
 				"data.governance.always_allow",
 			},
-			expectedRunErr: "missing signer identities",
+			expectedErr: "missing signer identities",
 		},
 		{
 			name: "invalid policy url",
@@ -331,7 +331,7 @@ func TestVsaCmd(t *testing.T) {
 				"--policy-query",
 				"data.governance.always_allow",
 			},
-			expectedInitErr: "policy-url must be provided",
+			expectedErr: "required flag(s) \"policy-url\" not set",
 		},
 	}
 
@@ -345,17 +345,16 @@ func TestVsaCmd(t *testing.T) {
 			inputAttestation := makeFakeAttestation(t, artifact)
 
 			flags := append(makeGlobalFlags(artifact.digest.String()), tc.flags...)
-			vsaCmd := &cmd.VSA{}
-			err = vsaCmd.Init(ctx, flags)
+			vsaCmd := cmd.VsaCmd()
+			err = vsaCmd.ParseFlags(flags)
 			if tc.expectedInitErr != "" {
 				assert.ErrorContains(t, err, tc.expectedInitErr)
 				return
 			}
-			assert.NoError(t, err)
 
-			err = vsaCmd.Run()
-			if tc.expectedRunErr != "" {
-				assert.ErrorContains(t, err, tc.expectedRunErr)
+			err = vsaCmd.ExecuteContext(ctx)
+			if tc.expectedErr != "" {
+				assert.ErrorContains(t, err, tc.expectedErr)
 				return
 			}
 			assert.NoError(t, err)
@@ -394,10 +393,9 @@ func TestVsaCmd(t *testing.T) {
 			"data.governance.always_allow",
 		)
 
-		vsaCmd := &cmd.VSA{}
-		err = vsaCmd.Init(ctx, flags)
-		assert.NoError(t, err)
-		err = vsaCmd.Run()
+		vsaCmd := cmd.VsaCmd()
+		assert.NoError(t, vsaCmd.ParseFlags(flags))
+		err = vsaCmd.ExecuteContext(ctx)
 		assert.NoError(t, err)
 
 		signatures, err := verifyImageAttestations(ctx, artifact)
@@ -436,11 +434,10 @@ func TestVsaCmd(t *testing.T) {
 			"data.governance.always_allow",
 		)
 
-		vsaCmd := &cmd.VSA{}
-		err = vsaCmd.Init(ctx, flags)
-		assert.NoError(t, err)
+		vsaCmd := cmd.VsaCmd()
+		assert.NoError(t, vsaCmd.ParseFlags(flags))
 
-		err = vsaCmd.Run()
+		err = vsaCmd.ExecuteContext(ctx)
 		assert.ErrorContains(t, err, "no matching attestations")
 	})
 
@@ -492,10 +489,10 @@ func TestVsaCmd(t *testing.T) {
 			"data.governance.always_allow",
 		)
 
-		vsaCmd := &cmd.VSA{}
-		err = vsaCmd.Init(ctx, flags)
-		assert.NoError(t, err)
-		assert.NoError(t, vsaCmd.Run())
+		vsaCmd := cmd.VsaCmd()
+		assert.NoError(t, vsaCmd.ParseFlags(flags))
+
+		assert.NoError(t, vsaCmd.ExecuteContext(ctx))
 
 		signatures, err := verifyImageAttestations(ctx, artifact)
 		assert.NoError(t, err)

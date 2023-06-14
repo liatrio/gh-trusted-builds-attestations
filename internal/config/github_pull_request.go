@@ -1,12 +1,12 @@
 package config
 
 import (
-	"flag"
+	"fmt"
+	"os"
 )
 
 type GitHubPullRequestCommandOptions struct {
 	GlobalOptions
-	fs          *flag.FlagSet
 	GitHubToken string
 }
 
@@ -15,22 +15,17 @@ func NewGitHubPullRequestCommandOptions() *GitHubPullRequestCommandOptions {
 		GlobalOptions: NewGlobalOptions(),
 	}
 
-	c.fs = flag.NewFlagSet("github-pull-request", flag.ContinueOnError)
-	c.AddFlags(c.fs)
-
 	return c
 }
 
-func (c *GitHubPullRequestCommandOptions) Parse(args []string) error {
-	githubToken, err := GetGitHubEnvToken()
-	if err != nil {
-		return err
-	}
-	c.GitHubToken = githubToken
-	err = c.fs.Parse(args)
-	if err != nil {
-		return err
+func (g *GitHubPullRequestCommandOptions) GetTokenFromEnv() error {
+	githubToken, githubTokenExists := os.LookupEnv("GITHUB_TOKEN")
+
+	if !githubTokenExists {
+		return fmt.Errorf("GITHUB_TOKEN not provided")
 	}
 
-	return c.GlobalOptions.ArtifactDigest.Parse()
+	g.GitHubToken = githubToken
+
+	return nil
 }

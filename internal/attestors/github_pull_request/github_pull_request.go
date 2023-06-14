@@ -46,7 +46,7 @@ func NewAttestor(ctx context.Context, opts *config.GitHubPullRequestCommandOptio
 		return nil, err
 	}
 
-	signer, err := sigstore.NewSigner(opts.RekorUrl)
+	signer, err := sigstore.NewSigner(opts.RekorUrl.String())
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func (g *Attestor) Attest(ctx context.Context, opts *config.GitHubPullRequestCom
 		attestation.Subject = append(attestation.Subject, in_toto.Subject{
 			Name: opts.ArtifactUri,
 			Digest: common.DigestSet{
-				opts.ArtifactDigest.Type: opts.ArtifactDigest.RawDigest,
+				opts.ArtifactDigest.Algorithm: opts.ArtifactDigest.Hex,
 			},
 		})
 
