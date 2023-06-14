@@ -27,8 +27,8 @@ import (
 func Attest(opts *config.VsaCommandOptions) error {
 	ctx := context.Background()
 
-	if opts.PolicyUrl.IsAbs() {
-		if err := downloadOPABundle(ctx, opts, policyBundleFilePath(opts.PolicyUrl)); err != nil {
+	if opts.PolicyUrl.Value().IsAbs() {
+		if err := downloadOPABundle(ctx, opts, policyBundleFilePath(opts.PolicyUrl.Value())); err != nil {
 			return err
 		}
 	}
@@ -53,7 +53,7 @@ func Attest(opts *config.VsaCommandOptions) error {
 		return err
 	}
 
-	signer, err := sigstore.NewSigner(opts.RekorUrl)
+	signer, err := sigstore.NewSigner(opts.RekorUrl.String())
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func collectAttestations(ctx context.Context, opts *config.VsaCommandOptions, id
 		return nil, err
 	}
 
-	rekorClient, err := rekor.GetRekorClient(opts.RekorUrl)
+	rekorClient, err := rekor.GetRekorClient(opts.RekorUrl.String())
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,7 @@ func querySignerIdentitiesFromPolicy(ctx context.Context, opts *config.VsaComman
 		rego.Query(opts.SignerIdentitiesQuery),
 		rego.EnablePrintStatements(opts.Debug),
 		rego.PrintHook(topdown.NewPrintHook(os.Stderr)),
-		rego.LoadBundle(policyBundleFilePath(opts.PolicyUrl)),
+		rego.LoadBundle(policyBundleFilePath(opts.PolicyUrl.Value())),
 	)
 
 	rs, err := r.Eval(ctx)
@@ -179,7 +179,7 @@ func evaluatePolicy(ctx context.Context, opts *config.VsaCommandOptions, attesta
 		rego.Input(input),
 		rego.EnablePrintStatements(opts.Debug),
 		rego.PrintHook(topdown.NewPrintHook(os.Stderr)),
-		rego.LoadBundle(policyBundleFilePath(opts.PolicyUrl)),
+		rego.LoadBundle(policyBundleFilePath(opts.PolicyUrl.Value())),
 	)
 
 	rs, err := r.Eval(ctx)

@@ -1,33 +1,12 @@
 package config
 
 import (
-	"flag"
-	"fmt"
-	"net/url"
-	"regexp"
-	"strings"
+	"github.com/spf13/cobra"
 )
-
-type Digest struct {
-	Value     string
-	RawDigest string
-	Type      string
-}
-
-func (d *Digest) Parse() error {
-	var found bool
-	d.Type, d.RawDigest, found = strings.Cut(d.Value, ":")
-	if !found {
-		return fmt.Errorf("expected artifact digest to be of the form hashType:digestValue")
-	}
-
-	return nil
-}
 
 type VsaCommandOptions struct {
 	GlobalOptions
-	fs                    *flag.FlagSet
-	PolicyUrl             *url.URL
+	PolicyUrl             *UrlValue
 	VerifierId            string
 	Debug                 bool
 	SignerIdentitiesQuery string
@@ -35,44 +14,22 @@ type VsaCommandOptions struct {
 }
 
 func NewVsaCommandOptions() *VsaCommandOptions {
-	c := &VsaCommandOptions{
+	return &VsaCommandOptions{
 		GlobalOptions: NewGlobalOptions(),
+		PolicyUrl:     &UrlValue{allowRelative: true},
 	}
-
-	c.fs = flag.NewFlagSet("vsa", flag.ContinueOnError)
-	c.fs.Func("policy-url", "Location of policy bundle that will be used to determine VSA result", func(s string) error {
-		u, err := url.Parse(s)
-		if err != nil {
-			return err
-		}
-
-		supportedSchemes := regexp.MustCompile("^https?$")
-		if u.IsAbs() && !supportedSchemes.MatchString(u.Scheme) {
-			return fmt.Errorf("unsupported scheme provided, should be one of http, https")
-		}
-
-		c.PolicyUrl = u
-		return nil
-	})
-
-	c.fs.StringVar(&c.VerifierId, "verifier-id", "", "ID of entity verifying policy for the VSA")
-	c.fs.StringVar(&c.SignerIdentitiesQuery, "signer-identities-query", "data.governance.signer_identities", "Rego query to retrieve keyless signer identities")
-	c.fs.StringVar(&c.PolicyQuery, "policy-query", "data.governance.allow", "Rego query to evaluate attestations against policy")
-	c.fs.BoolVar(&c.Debug, "debug", false, "Emit debug logs from policy evaluation")
-
-	c.AddFlags(c.fs)
-
-	return c
 }
 
-func (c *VsaCommandOptions) Parse(args []string) error {
-	if err := c.fs.Parse(args); err != nil {
-		return err
-	}
+func (vsa *VsaCommandOptions) AddFlags(cmd *cobra.Command) {
+	cmd.Flags().StringVar(&vsa.VerifierId, "verifier-id", "", "ID of entity verifying policy for the VSA")
+	cobra.CheckErr(cmd.MarkFlagRequired("verifier-id"))
 
-	if c.PolicyUrl == nil {
-		return fmt.Errorf("policy-url must be provided")
-	}
+	cmd.Flags().Var(vsa.PolicyUrl, "policy-url", "Location of policy bundle that will be used to determine VSA result")
+	cobra.CheckErr(cmd.MarkFlagRequired("policy-url"))
 
-	return c.ArtifactDigest.Parse()
+	cmd.Flags().StringVar(&vsa.SignerIdentitiesQuery, "signer-identities-query", "data.governance.signer_identities", "Rego query to retrieve keyless signer identities")
+	cmd.Flags().StringVar(&vsa.PolicyQuery, "policy-query", "data.governance.allow", "Rego query to evaluate attestations against policy")
+	cmd.Flags().BoolVar(&vsa.Debug, "debug", false, "Emit debug logs from policy evaluation")
+
+	vsa.GlobalOptions.AddFlags(cmd)
 }

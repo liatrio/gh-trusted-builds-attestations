@@ -1,42 +1,32 @@
 package cmd
 
 import (
-	"context"
-
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/attestors/github_pull_request"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
+	"github.com/spf13/cobra"
 )
 
-type GitHubPullRequest struct {
-	ctx      context.Context
-	opts     *config.GitHubPullRequestCommandOptions
-	attestor *github_pull_request.Attestor
-}
-
-func (g *GitHubPullRequest) Is(s string) bool {
-	return "github-pull-request" == s
-}
-
-func (g *GitHubPullRequest) Run() error {
-	return g.attestor.Attest(g.ctx, g.opts)
-}
-
-func (g *GitHubPullRequest) Init(ctx context.Context, flags []string) error {
-	g.ctx = ctx
-
+func GitHubPullRequestCmd() *cobra.Command {
 	opts := config.NewGitHubPullRequestCommandOptions()
-	err := opts.Parse(flags)
-	if err != nil {
-		return err
+
+	cmd := &cobra.Command{
+		Use:   "github-pull-request",
+		Short: "Creates a pull request attestation indicating who reviewed a change",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := opts.GetTokenFromEnv(); err != nil {
+				return err
+			}
+
+			attestor, err := github_pull_request.NewAttestor(cmd.Context(), opts)
+			if err != nil {
+				return err
+			}
+
+			return attestor.Attest(cmd.Context(), opts)
+		},
 	}
-	g.opts = opts
 
-	attestor, err := github_pull_request.NewAttestor(ctx, opts)
-	if err != nil {
-		return err
-	}
+	opts.AddFlags(cmd)
 
-	g.attestor = attestor
-
-	return nil
+	return cmd
 }

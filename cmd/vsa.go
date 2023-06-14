@@ -1,33 +1,23 @@
 package cmd
 
 import (
-	"context"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/attestors/vsa"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
+	"github.com/spf13/cobra"
 )
 
-type VSA struct {
-	ctx  context.Context
-	opts *config.VsaCommandOptions
-}
-
-func (v *VSA) Init(ctx context.Context, flags []string) error {
-	v.ctx = ctx
-
+func VsaCmd() *cobra.Command {
 	opts := config.NewVsaCommandOptions()
-	err := opts.Parse(flags)
-	if err != nil {
-		return err
+
+	cmd := &cobra.Command{
+		Use:   "vsa",
+		Short: "Creates a SLSA verification summary attestation by evaluating an artifact against an OPA policy",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return vsa.Attest(opts)
+		},
 	}
-	v.opts = opts
 
-	return nil
-}
+	opts.AddFlags(cmd)
 
-func (v *VSA) Is(s string) bool {
-	return "vsa" == s
-}
-
-func (v *VSA) Run() error {
-	return vsa.Attest(v.opts)
+	return cmd
 }

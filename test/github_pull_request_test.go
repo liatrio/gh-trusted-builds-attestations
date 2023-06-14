@@ -140,11 +140,12 @@ func TestGitHubPullRequestCmd(t *testing.T) {
 	runAttestationCmd := func(t *testing.T, ctx context.Context, artifact *containerImage) {
 		t.Helper()
 
-		ghprCmd := cmd.GitHubPullRequest{}
+		ghprCmd := cmd.GitHubPullRequestCmd()
 		flags := makeGlobalFlags(artifact.digest.String())
-		err := ghprCmd.Init(ctx, flags)
-		assert.NoError(t, err, "failure initializing test command")
-		assert.NoError(t, ghprCmd.Run(), "error running test command")
+
+		assert.NoError(t, ghprCmd.ParseFlags(flags))
+		err := ghprCmd.ExecuteContext(ctx)
+		assert.NoError(t, err)
 	}
 
 	type testCase struct {
@@ -319,13 +320,11 @@ func TestGitHubPullRequestCmd(t *testing.T) {
 		assert.NoError(t, err, "error making random image")
 
 		ctx := makeCtx(r, repo)
-		ghprCmd := cmd.GitHubPullRequest{}
+		ghprCmd := cmd.GitHubPullRequestCmd()
 		flags := makeGlobalFlags(artifact.digest.String())
-		err = ghprCmd.Init(ctx, flags)
-		assert.NoError(t, err, "failure initializing test command")
+		assert.NoError(t, ghprCmd.ParseFlags(flags))
 
-		err = ghprCmd.Run()
-
+		err = ghprCmd.ExecuteContext(ctx)
 		assert.ErrorContains(t, err, "remote url for 'origin' is invalid")
 	})
 
@@ -350,13 +349,11 @@ func TestGitHubPullRequestCmd(t *testing.T) {
 		assert.NoError(t, err, "error making random image")
 
 		ctx := makeCtx(r, repo)
-		ghprCmd := cmd.GitHubPullRequest{}
+		ghprCmd := cmd.GitHubPullRequestCmd()
 		flags := makeGlobalFlags(artifact.digest.String())
-		err = ghprCmd.Init(ctx, flags)
-		assert.NoError(t, err, "failure initializing test command")
+		assert.NoError(t, ghprCmd.ParseFlags(flags))
 
-		err = ghprCmd.Run()
-
+		err = ghprCmd.ExecuteContext(ctx)
 		assert.ErrorContains(t, err, "remote not found")
 	})
 
