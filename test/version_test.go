@@ -10,8 +10,7 @@ import (
 func TestVersionCmd(t *testing.T) {
 	t.Parallel()
 
-	versionCmd := &cmd.Version{}
+	versionCmd := cmd.VersionCmd()
 
-	assert.NoError(t, versionCmd.Init(nil, nil), "should init successfully")
-	assert.NoError(t, versionCmd.Run(), "should run without error")
+	assert.NoError(t, versionCmd.Execute(), "should run without error")
 }

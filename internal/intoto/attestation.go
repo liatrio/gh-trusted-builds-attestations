@@ -26,7 +26,7 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 	var inputAttestations []*vpb.VerificationSummary_InputAttestation
 
 	for _, attestation := range attestations {
-		entryUriPath, err := url.JoinPath(opts.RekorUrl, "api/v1/log/entries")
+		entryUriPath, err := url.JoinPath(opts.RekorUrl.String(), "api/v1/log/entries")
 		if err != nil {
 			return nil, err
 		}
@@ -82,7 +82,7 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 		Subject: []*spb.Statement_Subject{{
 			Name: opts.ArtifactUri,
 			Digest: map[string]string{
-				opts.ArtifactDigest.Type: opts.ArtifactDigest.RawDigest,
+				opts.ArtifactDigest.Algorithm: opts.ArtifactDigest.Hex,
 			},
 		}},
 		PredicateType: "https://slsa.dev/verification_summary/v0.2",

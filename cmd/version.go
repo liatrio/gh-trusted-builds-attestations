@@ -1,22 +1,16 @@
 package cmd
 
 import (
-	"context"
 	"github.com/liatrio/gh-trusted-builds-attestations/build"
+	"github.com/spf13/cobra"
 )
 
-type Version struct {
-}
-
-func (v *Version) Init(ctx context.Context, flags []string) error {
-	return nil
-}
-
-func (v *Version) Is(s string) bool {
-	return "version" == s
-}
-
-func (v *Version) Run() error {
-	println(build.Version)
-	return nil
+func VersionCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "Print version information",
+		Run: func(cmd *cobra.Command, args []string) {
+			println(build.Version)
+		},
+	}
 }
