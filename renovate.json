@@ -5,5 +5,5 @@
     ":semanticCommits",
     ":semanticCommitTypeAll(build)",
     ":semanticCommitScopeDisabled"
-  ],
+  ]
 }
