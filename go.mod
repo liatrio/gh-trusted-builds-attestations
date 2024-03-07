@@ -16,7 +16,7 @@ require (
 	github.com/sigstore/rekor v1.3.4
 	github.com/sigstore/sigstore v1.8.1
 	github.com/spf13/cobra v1.8.0
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	golang.org/x/oauth2 v0.16.0
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/dnaeon/go-vcr.v3 v3.1.2
