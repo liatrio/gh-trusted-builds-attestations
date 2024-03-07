@@ -26,7 +26,7 @@ jobs:
         id: detect-workflow
         uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow-js@v1.6.0
       - name: Sigstore Setup
-        uses: sigstore/scaffolding/actions/setup@v0.6.4
+        uses: sigstore/scaffolding/actions/setup@v0.6.17
         with:
           k8s-version: "v1.25.x"
           version: "v0.6.4"
