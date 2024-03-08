@@ -4,6 +4,11 @@ on:
     branches:
       - '**'
 
+env:
+  KUBECTL_VERSION: "v1.29.2"
+  SCAFFOLDING_K8S_VERSION: "v1.29.x"
+  SCAFFOLDING_VERSION: "v0.6.16"
+
 jobs:
   test:
     permissions:
@@ -12,26 +17,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         # match Kubectl version to kind cluster version used in scaffolding setup
         # https://github.com/sigstore/scaffolding/blob/8f5907d5dc59c1af0e3c757486105179eab3301a/hack/setup-kind.sh#L80-L81
       - name: Install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
           chmod +x kubectl
           mkdir -p $HOME/.bin/kubectl
           mv kubectl $HOME/.bin/kubectl/
           echo "$HOME/.bin/kubectl" >> $GITHUB_PATH
       - name: Detect Workflow
         id: detect-workflow
-        uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow-js@v1.6.0
+        uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow-js@52372c6734897f13514167d8921538225027b009
       - name: Sigstore Setup
-        uses: sigstore/scaffolding/actions/setup@v0.6.4
+        uses: sigstore/scaffolding/actions/setup@2d10614e854828e2389881abe6c5cf76240897a7 # v0
         with:
-          k8s-version: "v1.25.x"
-          version: "v0.6.4"
+          k8s-version: ${{ env.KUBECTL_VERSION }}
+          version: ${{ env.SCAFFOLDING_VERSION }}
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5
         with:
           go-version-file: 'go.mod'
       - name: Download Deps
@@ -55,11 +60,11 @@ jobs:
     needs: [test]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
         with:
           fetch-depth: 0
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
         with:
           node-version: 20
       - name: Setup Semantic Release
@@ -69,11 +74,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5
         with:
           go-version-file: 'go.mod'
       - name: GoReleaser
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@7ec5c2b0c6cdda6e8bbb49444bc797dd33d74dd8 # v5
         with:
           version: latest
           args: release --clean
