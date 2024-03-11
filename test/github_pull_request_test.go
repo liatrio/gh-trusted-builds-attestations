@@ -91,7 +91,6 @@ func TestGitHubPullRequestCmd(t *testing.T) {
 			if _, ok := interaction.Request.Headers["User-Agent"]; ok {
 				interaction.Request.Headers["User-Agent"] = []string{"go-github/vX.X.X"}
 			}
-			delete(interaction.Request.Headers, "abc")
 			return nil
 		}, recorder.AfterCaptureHook)
 
