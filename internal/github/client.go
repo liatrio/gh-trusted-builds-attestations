@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/go-git/go-git/v5"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v60/github"
 	"golang.org/x/oauth2"
 )
 
@@ -113,12 +113,7 @@ func (g *githubClient) GetRepositorySlugFromRemote(repository *git.Repository) (
 
 func (g *githubClient) ListPullRequestsWithCommit(ctx context.Context, slug *RepositorySlug, sha string) ([]*github.PullRequest, error) {
 	endpoint := func(opts *github.ListOptions) ([]*github.PullRequest, *github.Response, error) {
-		prOpts := &github.PullRequestListOptions{
-			State:       pullRequestFilter,
-			ListOptions: *opts,
-		}
-
-		return g.github.PullRequests.ListPullRequestsWithCommit(ctx, slug.Owner, slug.Repo, sha, prOpts)
+		return g.github.PullRequests.ListPullRequestsWithCommit(ctx, slug.Owner, slug.Repo, sha, opts)
 	}
 
 	pulls, err := paginate(endpoint)
