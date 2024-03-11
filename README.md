@@ -150,7 +150,7 @@ Prints the build version information of the application.
 
 ## Local Development
 
-In order to build the project, you'll need Go 1.20+.
+In order to build the project, you'll need Go 1.22+.
 
 Export any environment variables as described for the command being tested.
 
