@@ -79,7 +79,7 @@ func CreateVerificationSummaryAttestation(opts *config.VsaCommandOptions, passed
 
 	statement := &spb.Statement{
 		Type: in_toto.StatementInTotoV01,
-		Subject: []*spb.Statement_Subject{{
+		Subject: []*spb.ResourceDescriptor{{
 			Name: opts.ArtifactUri,
 			Digest: map[string]string{
 				opts.ArtifactDigest.Algorithm: opts.ArtifactDigest.Hex,

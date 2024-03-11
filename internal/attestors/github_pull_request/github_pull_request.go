@@ -14,7 +14,7 @@ import (
 	"github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/common"
 	"github.com/liatrio/gh-trusted-builds-attestations/internal/config"
 
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v60/github"
 	"github.com/in-toto/in-toto-golang/in_toto"
 	pull_request_v1 "github.com/liatrio/gh-trusted-builds-attestations/internal/attestations/github/pull_request/v1"
 	gh "github.com/liatrio/gh-trusted-builds-attestations/internal/github"
@@ -92,6 +92,10 @@ func (g *Attestor) Attest(ctx context.Context, opts *config.GitHubPullRequestCom
 	}
 
 	for _, pull := range pullRequests {
+		if pull.GetState() != "closed" {
+			continue
+		}
+
 		// fetch the pull request to get full details
 		pr, err := g.github.GetPullRequest(ctx, slug, pull.GetNumber())
 		if err != nil {

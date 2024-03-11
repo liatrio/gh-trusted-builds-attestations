@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-SIGSTORE_SCAFFOLDING_VERSION="v0.6.4"
-K8S_VERSION="v1.25.x"
+SIGSTORE_SCAFFOLDING_VERSION="v0.6.16"
+K8S_VERSION="v1.29.x"
 REGISTRY_URL="registry.local:5001"
 
 tmpDir=$(mktemp -d)

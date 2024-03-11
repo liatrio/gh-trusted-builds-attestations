@@ -85,6 +85,15 @@ func TestGitHubPullRequestCmd(t *testing.T) {
 			return nil
 		}, recorder.AfterCaptureHook)
 
+		// go-github includes the package version in the User-Agent header, meaning that version upgrades will prevent fixture matches
+		// instead, persist the saved user-agent header with a generic version pattern
+		r.AddHook(func(interaction *cassette.Interaction) error {
+			if _, ok := interaction.Request.Headers["User-Agent"]; ok {
+				interaction.Request.Headers["User-Agent"] = []string{"go-github/vX.X.X"}
+			}
+			return nil
+		}, recorder.AfterCaptureHook)
+
 		return r
 	}
 

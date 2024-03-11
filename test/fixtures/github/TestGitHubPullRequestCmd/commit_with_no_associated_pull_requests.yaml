@@ -18,10 +18,10 @@ interactions:
             Accept:
                 - application/vnd.github.groot-preview+json
             User-Agent:
-                - go-github/v52.0.0
+                - go-github/vX.X.X
             X-Github-Api-Version:
                 - "2022-11-28"
-        url: https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits/b61029fc9191455fcc833a319d3fd6d0cb0c2c5b/pulls?state=closed
+        url: https://api.github.com/repos/liatrio/pr-attestation-fixtures/commits/b61029fc9191455fcc833a319d3fd6d0cb0c2c5b/pulls
         method: GET
       response:
         proto: HTTP/2.0
@@ -46,11 +46,11 @@ interactions:
             Content-Type:
                 - application/json; charset=utf-8
             Date:
-                - Thu, 08 Jun 2023 13:30:37 GMT
+                - Mon, 11 Mar 2024 14:46:55 GMT
             Etag:
-                - '"4a86b558d7bf651c79193d2505359eec1bc1501e9ac4c7478b79f0d0895c561e"'
+                - '"6e5f5b0933b792bf8fc98ff313328220b1beb1ebf1ee6534849be66f920f9e44"'
             Github-Authentication-Token-Expiration:
-                - 2023-07-06 15:02:38 -0400
+                - 2024-04-10 10:38:53 -0400
             Referrer-Policy:
                 - origin-when-cross-origin, strict-origin-when-cross-origin
             Server:
@@ -60,6 +60,8 @@ interactions:
             Vary:
                 - Accept, Authorization, Cookie, X-GitHub-OTP
                 - Accept-Encoding, Accept, X-Requested-With
+            X-Accepted-Github-Permissions:
+                - pull_requests=read
             X-Content-Type-Options:
                 - nosniff
             X-Frame-Options:
@@ -69,19 +71,19 @@ interactions:
             X-Github-Media-Type:
                 - github.v3; param=groot-preview; format=json
             X-Github-Request-Id:
-                - E1EE:50DE:3232675:6682E0D:6481D7FD
+                - F228:1784:8B0FC:10BC28:65EF195F
             X-Ratelimit-Limit:
                 - "5000"
             X-Ratelimit-Remaining:
-                - "4999"
+                - "4989"
             X-Ratelimit-Reset:
-                - "1686234637"
+                - "1710171697"
             X-Ratelimit-Resource:
                 - core
             X-Ratelimit-Used:
-                - "1"
+                - "11"
             X-Xss-Protection:
                 - "0"
         status: 200 OK
         code: 200
-        duration: 280.204798ms
+        duration: 301.696458ms
