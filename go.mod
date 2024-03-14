@@ -6,7 +6,7 @@ toolchain go1.22.1
 
 require (
 	github.com/go-git/go-git/v5 v5.11.0
-	github.com/google/go-containerregistry v0.19.0
+	github.com/google/go-containerregistry v0.19.1
 	github.com/google/go-github/v60 v60.0.0
 	github.com/in-toto/attestation v1.0.1
 	github.com/in-toto/in-toto-golang v0.9.0
