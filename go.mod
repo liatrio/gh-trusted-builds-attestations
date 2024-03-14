@@ -19,7 +19,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/oauth2 v0.18.0
 	google.golang.org/protobuf v1.33.0
-	gopkg.in/dnaeon/go-vcr.v3 v3.1.2
+	gopkg.in/dnaeon/go-vcr.v3 v3.2.0
 )
 
 require (

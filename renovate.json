@@ -6,5 +6,6 @@
     ":semanticCommitTypeAll(build)",
     ":semanticCommitScopeDisabled",
     "helpers:pinGitHubActionDigests"
-  ]
+  ],
+  "postUpdateOptions": ["gomodTidy"]
 }
