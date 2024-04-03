@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -43,6 +44,7 @@ type Client interface {
 	GetPullRequest(ctx context.Context, slug *RepositorySlug, number int) (*github.PullRequest, error)
 	ListPullRequestCommits(ctx context.Context, slug *RepositorySlug, number int) ([]*github.RepositoryCommit, error)
 	ListPullRequestReviews(ctx context.Context, slug *RepositorySlug, number int) ([]*github.PullRequestReview, error)
+	GetRepositoryArchiveAtRef(ctx context.Context, slug *RepositorySlug, ref string) ([]byte, error)
 }
 
 type githubClient struct {
@@ -157,6 +159,34 @@ func (g *githubClient) ListPullRequestReviews(ctx context.Context, slug *Reposit
 	}
 
 	return reviews, nil
+}
+
+func (g *githubClient) GetRepositoryArchiveAtRef(ctx context.Context, slug *RepositorySlug, ref string) ([]byte, error) {
+	archiveLocation, _, err := g.github.Repositories.GetArchiveLink(ctx, slug.Owner, slug.Repo, github.Tarball, &github.RepositoryContentGetOptions{
+		Ref: ref,
+	}, 0)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := g.github.Client().Get(archiveLocation.String())
+	if err != nil {
+		return nil, err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	}
+
+	defer response.Body.Close()
+
+	archive, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return archive, nil
 }
 
 type paginatedEndpoint[T any] func(*github.ListOptions) ([]*T, *github.Response, error)

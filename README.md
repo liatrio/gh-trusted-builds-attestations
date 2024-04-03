@@ -120,7 +120,8 @@ The following process is used to create a VSA:
 
 `--policy-url`: Location of policy bundle that will be used to determine VSA result.
 Supports http(s) urls for unauthenticated external downloads.
-Absolute and relative paths can be used for an existing, local bundle.
+Absolute and relative paths can be used for an existing, local bundle or directory.
+It's also possible to download files from a particular GitHub commit
 
 Examples:
 
@@ -128,6 +129,8 @@ Examples:
 - `bundle.tar.gz`
 - `../bundle.tar.gz`
 - `/Users/myhome/bundle.tar.gz`
+- `../policy`
+- `https://github.com/liatrio/gh-trusted-builds-policy/tree/ef3194db6ca9a7a4b030686e4669c45db360a0c2/policy`
 
 `--signer-identities-query`: A Rego query that should specify the expected attestation signer identities. The result should be a list of objects that can be unmarshalled into `cosign.Identity`. Defaults to `data.governance.signer_identities`.
 
