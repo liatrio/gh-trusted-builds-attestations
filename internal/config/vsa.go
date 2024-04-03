@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/spf13/cobra"
+	"os"
 )
 
 type VsaCommandOptions struct {
@@ -11,6 +12,7 @@ type VsaCommandOptions struct {
 	Debug                 bool
 	SignerIdentitiesQuery string
 	PolicyQuery           string
+	GitHubToken           string
 }
 
 func NewVsaCommandOptions() *VsaCommandOptions {
@@ -32,4 +34,8 @@ func (vsa *VsaCommandOptions) AddFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&vsa.Debug, "debug", false, "Emit debug logs from policy evaluation")
 
 	vsa.GlobalOptions.AddFlags(cmd)
+}
+
+func (vsa *VsaCommandOptions) GetTokenFromEnv() {
+	vsa.GitHubToken = os.Getenv("GITHUB_TOKEN")
 }

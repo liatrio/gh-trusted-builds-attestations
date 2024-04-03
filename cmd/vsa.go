@@ -13,6 +13,8 @@ func VsaCmd() *cobra.Command {
 		Use:   "vsa",
 		Short: "Creates a SLSA verification summary attestation by evaluating an artifact against an OPA policy",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.GetTokenFromEnv()
+
 			return vsa.Attest(opts)
 		},
 	}
