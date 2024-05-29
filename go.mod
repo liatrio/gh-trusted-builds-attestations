@@ -8,7 +8,7 @@ require (
 	github.com/go-git/go-git/v5 v5.11.0
 	github.com/google/go-containerregistry v0.19.0
 	github.com/google/go-github/v60 v60.0.0
-	github.com/in-toto/attestation v1.0.1
+	github.com/in-toto/attestation v1.1.0
 	github.com/in-toto/in-toto-golang v0.9.0
 	github.com/open-policy-agent/opa v0.62.1
 	github.com/secure-systems-lab/go-securesystemslib v0.8.0
@@ -18,7 +18,7 @@ require (
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/oauth2 v0.18.0
-	google.golang.org/protobuf v1.33.0
+	google.golang.org/protobuf v1.34.1
 	gopkg.in/dnaeon/go-vcr.v3 v3.2.0
 )
 
