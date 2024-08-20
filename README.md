@@ -159,6 +159,8 @@ Export any environment variables as described for the command being tested.
 
 Each attestor should have a [Makefile](Makefile) target to invoke it, like this: `make github-pull-request`
 
+Running any `vsa` commands will require that you have authenticated against the artifact-uri already. (if you are providing a ghcr.io container registry repo, then make sure to `docker login ghcr.io` before running commands)
+
 ### Integration Tests
 
 This application includes a suite of integration tests that verify the different attestation commands. In order to run the tests, you'll need to have these tools installed locally:
