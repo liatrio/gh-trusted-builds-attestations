@@ -17,14 +17,13 @@ require (
 	github.com/sigstore/sigstore v1.8.2
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/oauth2 v0.18.0
+	golang.org/x/oauth2 v0.23.0
 	google.golang.org/protobuf v1.33.0
 	gopkg.in/dnaeon/go-vcr.v3 v3.2.0
 )
 
 require (
-	cloud.google.com/go/compute v1.23.3 // indirect
-	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	dario.cat/mergo v1.0.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/alibabacloudsdkgo/helper v0.2.0 // indirect
@@ -223,7 +222,6 @@ require (
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.15.0 // indirect
 	google.golang.org/api v0.159.0 // indirect
-	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240123012728-ef4313101c80 // indirect
 	google.golang.org/grpc v1.62.0 // indirect
 	gopkg.in/go-jose/go-jose.v2 v2.6.1 // indirect
