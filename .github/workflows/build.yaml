@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         # match Kubectl version to kind cluster version used in scaffolding setup
         # https://github.com/sigstore/scaffolding/blob/8f5907d5dc59c1af0e3c757486105179eab3301a/hack/setup-kind.sh#L80-L81
       - name: Install kubectl
@@ -59,7 +59,7 @@ jobs:
     needs: [test]
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
       - name: Setup Node.js
