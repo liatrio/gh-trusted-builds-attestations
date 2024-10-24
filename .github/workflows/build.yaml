@@ -28,7 +28,7 @@ jobs:
           echo "$HOME/.bin/kubectl" >> $GITHUB_PATH
       - name: Detect Workflow
         id: detect-workflow
-        uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow-js@52372c6734897f13514167d8921538225027b009
+        uses: slsa-framework/slsa-github-generator/.github/actions/detect-workflow-js@2333f37e183e7e0b0d75d5266b55c60c55310824
       - name: Sigstore Setup
         uses: sigstore/scaffolding/actions/setup@a20ae166ad6fe8f7165f4b3ee218acf72d9c45e8 # v0.6.17
         with:
